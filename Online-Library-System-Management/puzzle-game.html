@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Puzzle Game - GameVerse Library</title>
+<link rel="stylesheet" href="./responsive.css">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Rajdhani', 'Orbitron', sans-serif;
+    background: 
+      radial-gradient(circle at 20% 30%, #ff3366 0%, transparent 20%),
+      radial-gradient(circle at 80% 70%, #33ccff 0%, transparent 20%),
+      radial-gradient(circle at 40% 80%, #ffcc00 0%, transparent 20%),
+      linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    animation: backgroundPulse 15s ease-in-out infinite;
+  }
+
+  @keyframes backgroundPulse {
+    0%, 100% { 
+      background: 
+        radial-gradient(circle at 20% 30%, #ff3366 0%, transparent 20%),
+        radial-gradient(circle at 80% 70%, #33ccff 0%, transparent 20%),
+        radial-gradient(circle at 40% 80%, #ffcc00 0%, transparent 20%),
+        linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+    }
+    33% { 
+      background: 
+        radial-gradient(circle at 80% 30%, #33ccff 0%, transparent 20%),
+        radial-gradient(circle at 40% 70%, #ffcc00 0%, transparent 20%),
+        radial-gradient(circle at 20% 80%, #ff3366 0%, transparent 20%),
+        linear-gradient(225deg, #0f0f1a 0%, #1a1a2e 100%);
+    }
+    66% { 
+      background: 
+        radial-gradient(circle at 40% 30%, #ffcc00 0%, transparent 20%),
+        radial-gradient(circle at 20% 70%, #ff3366 0%, transparent 20%),
+        radial-gradient(circle at 80% 80%, #33ccff 0%, transparent 20%),
+        linear-gradient(315deg, #0f0f1a 0%, #1a1a2e 100%);
+    }
+  }
+
+  .game-container {
+    background: rgba(42, 42, 74, 0.9);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 15px 40px rgba(255, 51, 102, 0.3);
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+    border: 2px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .game-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #ff3366, #33ccff, #ffcc00);
+  }
+
+  .game-header {
+    margin-bottom: 30px;
+  }
+
+  .game-header h1 {
+    color: #ffcc00;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+    font-family: 'Orbitron', sans-serif;
+  }
+
+  .game-header p {
+    color: #cccccc;
+    font-size: 1.1rem;
+  }
+
+  .book-info {
+    background: rgba(42, 42, 74, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border: 1px solid rgba(51, 204, 255, 0.3);
+  }
+
+  .book-cover {
+    width: 100px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    border: 2px solid #33ccff;
+  }
+
+  .book-details h3 {
+    color: #ffcc00;
+    margin-bottom: 5px;
+    text-shadow: 0 0 5px rgba(255, 204, 0, 0.3);
+  }
+
+  .book-details p {
+    color: #cccccc;
+  }
+
+  .stats-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+    background: rgba(42, 42, 74, 0.7);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 204, 0, 0.3);
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #33ccff;
+    text-shadow: 0 0 5px rgba(51, 204, 255, 0.3);
+  }
+
+  .stat-label {
+    color: #cccccc;
+    font-size: 0.9rem;
+  }
+
+  .puzzle-area {
+    margin: 30px 0;
+  }
+
+  .puzzle-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto 20px;
+    border: 3px solid #ffcc00;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
+  }
+
+  .puzzle-tile {
+    background-size: 300px 300px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.2);
+    position: relative;
+  }
+
+  .puzzle-tile:hover {
+    transform: scale(1.05);
+    z-index: 1;
+    box-shadow: 0 0 10px rgba(51, 204, 255, 0.5);
+  }
+
+  .empty-tile {
+    background: rgba(30, 30, 50, 0.8);
+    cursor: not-allowed;
+  }
+
+  .controls {
+    margin: 20px 0;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Rajdhani', sans-serif;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #ff3366, #cc1a4a);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #ff1a53, #b3153a);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 51, 102, 0.4);
+  }
+
+  .btn-secondary {
+    background: linear-gradient(135deg, #33ccff, #1a99cc);
+    color: white;
+  }
+
+  .btn-secondary:hover {
+    background: linear-gradient(135deg, #1a99cc, #147399);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(51, 204, 255, 0.4);
+  }
+
+  .btn-success {
+    background: linear-gradient(135deg, #00cc66, #00994d);
+    color: white;
+  }
+
+  .btn-success:hover {
+    background: linear-gradient(135deg, #00b359, #008040);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 204, 102, 0.4);
+  }
+
+  .btn-complete {
+    background: linear-gradient(135deg, #ffcc00, #cc9900);
+    color: #1a1a2e;
+  }
+
+  .btn-complete:hover {
+    background: linear-gradient(135deg, #e6b800, #b38600);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 204, 0, 0.4);
+  }
+
+  .btn-download {
+    background: linear-gradient(135deg, #9966ff, #7a4dcc);
+    color: white;
+  }
+
+  .btn-download:hover {
+    background: linear-gradient(135deg, #8a52e6, #6b40b3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(153, 102, 255, 0.4);
+  }
+
+  .btn:disabled {
+    background: #666;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .message-box {
+    background: rgba(42, 42, 74, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 15px 0;
+    border: 1px solid;
+    display: none;
+  }
+
+  .message-success {
+    border-color: #00cc66;
+    background: rgba(0, 204, 102, 0.1);
+    color: #00cc66;
+  }
+
+  .message-warning {
+    border-color: #ffcc00;
+    background: rgba(255, 204, 0, 0.1);
+    color: #ffcc00;
+  }
+
+  .message-error {
+    border-color: #ff3366;
+    background: rgba(255, 51, 102, 0.1);
+    color: #ff3366;
+  }
+
+  .message-info {
+    border-color: #33ccff;
+    background: rgba(51, 204, 255, 0.1);
+    color: #33ccff;
+  }
+
+  .download-section {
+    margin: 30px 0;
+    padding: 20px;
+    background: rgba(42, 42, 74, 0.7);
+    border-radius: 10px;
+    display: none;
+    border: 1px solid rgba(51, 204, 255, 0.3);
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 20px;
+    background: rgba(30, 30, 50, 0.8);
+    border-radius: 10px;
+    margin: 20px 0;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .progress {
+    height: 100%;
+    background: linear-gradient(90deg, #ff3366, #33ccff, #ffcc00);
+    width: 0%;
+    transition: width 0.5s ease;
+  }
+
+  @keyframes celebrate {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  .celebrate {
+    animation: celebrate 0.5s ease 3;
+  }
+
+  .hint-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    display: none;
+  }
+
+  .hint-image {
+    max-width: 80%;
+    max-height: 80%;
+    border-radius: 10px;
+    box-shadow: 0 0 50px rgba(255,255,255,0.3);
+    border: 3px solid #ffcc00;
+  }
+
+  .close-hint {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 51, 102, 0.8);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .close-hint:hover {
+    background: rgba(255, 51, 102, 1);
+    transform: scale(1.1);
+  }
+
+  .back-btn {
+    margin-top: 30px;
+    background: linear-gradient(135deg, #666, #444);
+    color: white;
+  }
+
+  .back-btn:hover {
+    background: linear-gradient(135deg, #777, #555);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 102, 102, 0.4);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .game-container {
+      padding: 20px;
+      margin: 10px;
+    }
+    
+    .game-header h1 {
+      font-size: 2rem;
+    }
+    
+    .puzzle-grid {
+      width: 250px;
+      height: 250px;
+    }
+    
+    .controls {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .btn {
+      width: 200px;
+    }
+    
+    .book-info {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .stats-container {
+      flex-direction: column;
+      gap: 15px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .puzzle-grid {
+      width: 200px;
+      height: 200px;
+    }
+    
+    .game-header h1 {
+      font-size: 1.8rem;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      font-size: 0.9rem;
+    }
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🎮 Book Puzzle Challenge</h1>
+      <p>Complete the puzzle to unlock your book download!</p>
+    </div>
+
+    <div class="book-info">
+      <img id="bookCover" src="" alt="Book Cover" class="book-cover">
+      <div class="book-details">
+        <h3 id="bookTitle">Book Title</h3>
+        <p id="bookAuthor">Complete puzzle to download</p>
+      </div>
+    </div>
+
+    <div class="stats-container">
+      <div class="stat-item">
+        <div class="stat-value" id="timer">00:00</div>
+        <div class="stat-label">⏱️ Time</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="moves">0</div>
+        <div class="stat-label">🔄 Moves</div>
+      </div>
+    </div>
+
+    <div class="puzzle-area">
+      <div class="puzzle-grid" id="puzzleGrid">
+        <!-- Puzzle tiles will be generated here -->
+      </div>
+    </div>
+
+    <div class="message-box message-success" id="puzzleSolvedMessage">
+      <h3>🎯 Puzzle Solved!</h3>
+      <p>You've successfully solved the puzzle! Click "Complete Puzzle" to confirm and unlock your download.</p>
+    </div>
+
+    <div class="message-box message-warning" id="completeFirstMessage">
+      <h3>⏳ Complete the Puzzle First!</h3>
+      <p>Please complete the puzzle game first, then you can download the book.</p>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" id="shuffleBtn">🔀 Shuffle Puzzle</button>
+      <button class="btn btn-secondary" id="hintBtn">💡 Show Hint</button>
+      <button class="btn btn-complete" id="completeBtn" style="display: none;">✅ Complete Puzzle</button>
+      <button class="btn btn-download" id="downloadBtnMain">📥 Download Book</button>
+    </div>
+
+    <div class="message-box message-success" id="completionMessage">
+      <h3>🎉 Puzzle Completed!</h3>
+      <p>Congratulations! You've officially completed the puzzle. You can now download your book.</p>
+    </div>
+
+    <div class="message-box message-error" id="incompleteMessage">
+      <h3>⚠️ Puzzle Not Complete</h3>
+      <p>Please complete the puzzle first to download the book.</p>
+    </div>
+
+    <div class="download-section" id="downloadSection">
+      <h3>📚 Your Book is Ready!</h3>
+      <p>Downloading: <strong id="downloadBookTitle"></strong></p>
+      <div class="progress-bar">
+        <div class="progress" id="downloadProgress"></div>
+      </div>
+      <p id="downloadStatus">Preparing download...</p>
+    </div>
+
+    <div style="margin-top: 30px;">
+      <button class="btn back-btn" onclick="goBackToLibrary()">
+        ← Back to Library
+      </button>
+    </div>
+  </div>
+
+  <!-- Hint Overlay -->
+  <div class="hint-overlay" id="hintOverlay">
+    <button class="close-hint" onclick="hideHint()">×</button>
+    <img id="hintImage" src="" alt="Book Cover Hint" class="hint-image">
+  </div>
+
+  <script>
+    // Game variables
+    let puzzleTiles = [];
+    let emptyIndex = 8; // Last tile is empty
+    let startTime;
+    let timerInterval;
+    let isPuzzleSolved = false;
+    let currentBookId, currentBookImage, currentBookTitle;
+    let moveCount = 0;
+    let puzzleCompleted = false;
+
+    // Initialize game
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get book info from localStorage
+      currentBookId = localStorage.getItem('current_book_id');
+      currentBookImage = localStorage.getItem('current_book_image');
+      currentBookTitle = localStorage.getItem('current_book_title');
+
+      if (!currentBookId || !currentBookImage) {
+        alert('No book selected! Redirecting to library...');
+        window.location.href = './book-catalog.html';
+        return;
+      }
+
+      // Display book info
+      document.getElementById('bookCover').src = currentBookImage;
+      document.getElementById('bookTitle').textContent = currentBookTitle;
+      document.getElementById('hintImage').src = currentBookImage;
+
+      // Initialize puzzle
+      initializePuzzle();
+      startTimer();
+
+      // Event listeners
+      document.getElementById('shuffleBtn').addEventListener('click', shufflePuzzle);
+      document.getElementById('hintBtn').addEventListener('click', showHint);
+      document.getElementById('completeBtn').addEventListener('click', completePuzzle);
+      document.getElementById('downloadBtnMain').addEventListener('click', handleDownloadClick);
+    });
+
+    function initializePuzzle() {
+      const puzzleGrid = document.getElementById('puzzleGrid');
+      puzzleGrid.innerHTML = '';
+
+      // Create 3x3 grid (9 tiles)
+      for (let i = 0; i < 9; i++) {
+        const tile = document.createElement('div');
+        tile.className = 'puzzle-tile';
+        tile.dataset.index = i;
+        
+        if (i === emptyIndex) {
+          tile.classList.add('empty-tile');
+        } else {
+          // Calculate background position for each tile
+          const row = Math.floor(i / 3);
+          const col = i % 3;
+          const bgX = -col * 100;
+          const bgY = -row * 100;
+          
+          tile.style.backgroundImage = `url('${currentBookImage}')`;
+          tile.style.backgroundPosition = `${bgX}% ${bgY}%`;
+          tile.style.backgroundSize = '300px 300px';
+          
+          tile.addEventListener('click', () => moveTile(i));
+        }
+        
+        puzzleGrid.appendChild(tile);
+        puzzleTiles.push(tile);
+      }
+
+      // Shuffle the puzzle
+      shufflePuzzle();
+    }
+
+    function shufflePuzzle() {
+      if (puzzleCompleted) return;
+
+      // Reset move count
+      moveCount = 0;
+      document.getElementById('moves').textContent = moveCount;
+
+      // Hide all completion-related elements
+      document.getElementById('puzzleSolvedMessage').style.display = 'none';
+      document.getElementById('completeBtn').style.display = 'none';
+      document.getElementById('completionMessage').style.display = 'none';
+      document.getElementById('completeFirstMessage').style.display = 'none';
+      document.getElementById('incompleteMessage').style.display = 'none';
+
+      // Simple shuffle algorithm - make 100 random moves
+      for (let i = 0; i < 100; i++) {
+        const adjacentTiles = getAdjacentTiles(emptyIndex);
+        const randomTile = adjacentTiles[Math.floor(Math.random() * adjacentTiles.length)];
+        swapTiles(randomTile, emptyIndex);
+      }
+
+      // Reset solved state
+      isPuzzleSolved = false;
+      puzzleCompleted = false;
+    }
+
+    function getAdjacentTiles(index) {
+      const adjacent = [];
+      const row = Math.floor(index / 3);
+      const col = index % 3;
+
+      // Check all four directions
+      if (row > 0) adjacent.push(index - 3); // Up
+      if (row < 2) adjacent.push(index + 3); // Down
+      if (col > 0) adjacent.push(index - 1); // Left
+      if (col < 2) adjacent.push(index + 1); // Right
+
+      return adjacent;
+    }
+
+    function moveTile(clickedIndex) {
+      if (puzzleCompleted) return;
+
+      const adjacentTiles = getAdjacentTiles(emptyIndex);
+      
+      if (adjacentTiles.includes(clickedIndex)) {
+        swapTiles(clickedIndex, emptyIndex);
+        moveCount++;
+        document.getElementById('moves').textContent = moveCount;
+        checkPuzzleSolved();
+      }
+    }
+
+    function swapTiles(index1, index2) {
+      // Swap classes
+      puzzleTiles[index1].classList.toggle('empty-tile');
+      puzzleTiles[index2].classList.toggle('empty-tile');
+
+      // Swap background positions
+      const tempBg = puzzleTiles[index1].style.backgroundImage;
+      puzzleTiles[index1].style.backgroundImage = puzzleTiles[index2].style.backgroundImage;
+      puzzleTiles[index2].style.backgroundImage = tempBg;
+
+      const tempPos = puzzleTiles[index1].style.backgroundPosition;
+      puzzleTiles[index1].style.backgroundPosition = puzzleTiles[index2].style.backgroundPosition;
+      puzzleTiles[index2].style.backgroundPosition = tempPos;
+
+      // Update empty index
+      emptyIndex = index1;
+    }
+
+    function checkPuzzleSolved() {
+      let solved = true;
+      
+      for (let i = 0; i < 9; i++) {
+        if (i === emptyIndex) continue;
+        
+        const row = Math.floor(i / 3);
+        const col = i % 3;
+        const expectedX = -col * 100;
+        const expectedY = -row * 100;
+        const currentPos = puzzleTiles[i].style.backgroundPosition;
+        
+        if (currentPos !== `${expectedX}% ${expectedY}%`) {
+          solved = false;
+          break;
+        }
+      }
+
+      if (solved && !isPuzzleSolved) {
+        isPuzzleSolved = true;
+        
+        // Show puzzle solved message and complete button
+        document.getElementById('puzzleSolvedMessage').style.display = 'block';
+        document.getElementById('completeBtn').style.display = 'block';
+        
+        // Add celebration effect
+        document.querySelector('.game-container').classList.add('celebrate');
+        setTimeout(() => {
+          document.querySelector('.game-container').classList.remove('celebrate');
+        }, 1500);
+      }
+    }
+
+    function completePuzzle() {
+      if (!isPuzzleSolved) {
+        showIncompleteMessage();
+        return;
+      }
+
+      puzzleCompleted = true;
+      clearInterval(timerInterval);
+      
+      // Hide puzzle solved message and complete button
+      document.getElementById('puzzleSolvedMessage').style.display = 'none';
+      document.getElementById('completeBtn').style.display = 'none';
+      
+      // Show completion message
+      document.getElementById('completionMessage').style.display = 'block';
+      
+      // Store puzzle completion in localStorage
+      localStorage.setItem('puzzleSuccess', 'true');
+      
+      // Show congratulatory message
+      alert(`🎊 Excellent! You completed the puzzle in ${document.getElementById('timer').textContent} with ${moveCount} moves!`);
+    }
+
+    function handleDownloadClick() {
+      if (!puzzleCompleted) {
+        // Show "complete first" message
+        document.getElementById('completeFirstMessage').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('completeFirstMessage').style.display = 'none';
+        }, 3000);
+        return;
+      }
+      
+      // If puzzle is completed, start download
+      startDownload();
+    }
+
+    function showIncompleteMessage() {
+      document.getElementById('incompleteMessage').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('incompleteMessage').style.display = 'none';
+      }, 3000);
+    }
+
+    function showHint() {
+      document.getElementById('hintOverlay').style.display = 'flex';
+    }
+
+    function hideHint() {
+      document.getElementById('hintOverlay').style.display = 'none';
+    }
+
+    function startTimer() {
+      startTime = new Date();
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+      const currentTime = new Date();
+      const elapsed = Math.floor((currentTime - startTime) / 1000);
+      const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+      const seconds = (elapsed % 60).toString().padStart(2, '0');
+      document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+    }
+
+    function startDownload() {
+      if (!puzzleCompleted) {
+        showIncompleteMessage();
+        return;
+      }
+
+      const downloadSection = document.getElementById('downloadSection');
+      const downloadProgress = document.getElementById('downloadProgress');
+      const downloadStatus = document.getElementById('downloadStatus');
+      const downloadBookTitle = document.getElementById('downloadBookTitle');
+
+      downloadBookTitle.textContent = currentBookTitle;
+      downloadSection.style.display = 'block';
+
+      // Simulate download process
+      let progress = 0;
+      const downloadInterval = setInterval(() => {
+        progress += Math.random() * 10;
+        if (progress >= 100) {
+          progress = 100;
+          clearInterval(downloadInterval);
+          completeDownload();
+        }
+        downloadProgress.style.width = `${progress}%`;
+        downloadStatus.textContent = `Downloading... ${Math.floor(progress)}%`;
+      }, 200);
+    }
+
+    function completeDownload() {
+      const downloadStatus = document.getElementById('downloadStatus');
+      
+      // Update user download history
+      let userDownloads = JSON.parse(localStorage.getItem('ol_user_downloads') || '{}');
+      
+      if (!userDownloads[currentBookId]) {
+        userDownloads[currentBookId] = {
+          downloaded: true,
+          downloadDate: new Date().toISOString(),
+          downloadsLeft: 0
+        };
+      } else {
+        userDownloads[currentBookId].downloaded = true;
+        userDownloads[currentBookId].downloadDate = new Date().toISOString();
+      }
+      
+      localStorage.setItem('ol_user_downloads', JSON.stringify(userDownloads));
+
+      downloadStatus.innerHTML = '✅ Download Complete!<br>You can now read the book in your library.';
+      
+      // Create a fake download link (in real implementation, this would be actual file download)
+      setTimeout(() => {
+        alert(`🎉 Congratulations! "${currentBookTitle}" has been added to your library.\n\nYou can only download this book once.`);
+        window.location.href = './book-catalog.html';
+      }, 1000);
+    }
+
+    function goBackToLibrary() {
+      // Clear puzzle success flag if going back without completing
+      if (!puzzleCompleted) {
+        localStorage.removeItem('puzzleSuccess');
+      }
+      window.location.href = './book-catalog.html';
+    }
+
+    // Clean up on page unload
+    window.addEventListener('beforeunload', function() {
+      clearInterval(timerInterval);
+    });
+
+    // Keyboard controls for accessibility
+    document.addEventListener('keydown', function(e) {
+      if (puzzleCompleted) return;
+
+      let tileToMove = -1;
+      
+      switch(e.key) {
+        case 'ArrowUp':
+          // Move tile below empty space up
+          if (Math.floor(emptyIndex / 3) < 2) tileToMove = emptyIndex + 3;
+          break;
+        case 'ArrowDown':
+          // Move tile above empty space down
+          if (Math.floor(emptyIndex / 3) > 0) tileToMove = emptyIndex - 3;
+          break;
+        case 'ArrowLeft':
+          // Move tile to the right of empty space left
+          if (emptyIndex % 3 < 2) tileToMove = emptyIndex + 1;
+          break;
+        case 'ArrowRight':
+          // Move tile to the left of empty space right
+          if (emptyIndex % 3 > 0) tileToMove = emptyIndex - 1;
+          break;
+        default:
+          return;
+      }
+
+      if (tileToMove >= 0 && tileToMove < 9) {
+        moveTile(tileToMove);
+      }
+    });
+  </script>
+</body>
+</html>

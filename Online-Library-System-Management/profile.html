@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Profile — GameVerse Library</title>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+      /* Sticky Navbar CSS */
+        .gv-bar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: #1a1a2e; /* Add background color so content doesn't show through */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visibility */
+        }
+        
+        /* Rest of your existing styles... */
+        .gv-bar-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .gv-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        
+        .gv-menu {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .gv-item {
+            color: #e6e6e6;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .gv-item:hover {
+            background-color: #2a2a3e;
+        }
+        
+        /* Optional: Add some content to see scrolling effect */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f0f1a;
+            color: #fff;
+            min-height: 2000px; /* Just for demonstration */
+        }
+
+    :root{--accent1:#ff3366;--accent2:#33ccff;--accent3:#ffcc00}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:'Rajdhani','Orbitron',sans-serif;
+      background:
+        radial-gradient(circle at 20% 30%, var(--accent1) 0%, transparent 20%),
+        radial-gradient(circle at 80% 70%, var(--accent2) 0%, transparent 20%),
+        radial-gradient(circle at 40% 80%, var(--accent3) 0%, transparent 20%),
+        linear-gradient(135deg,#0f0f1a 0%, #1a1a2e 100%);
+      color:#fff;
+      min-height:100vh;
+      padding:28px;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    /* Prevent white flash on scroll/overscroll */
+html {
+  background-color: #050818;  /* same dark base as your page */
+  overscroll-behavior: none;  /* stops the bounce showing page background */
+}
+
+
+    .nav{max-width:1200px;margin:0 auto 18px;display:flex;justify-content:space-between;align-items:center}
+    .brand{font-family:'Orbitron';color:var(--accent3);font-weight:700;font-size:20px}
+    .nav ul{display:flex;gap:12px;list-style:none;margin:0;padding:0}
+    .nav a{color:#cfefff;text-decoration:none;padding:8px 12px;border-radius:8px}
+    .nav a.active{background:linear-gradient(90deg, rgba(255,51,102,0.12), rgba(51,204,255,0.08));color:#fff}
+
+    .layout{max-width:1200px;margin:0 auto;display:flex;gap:22px;align-items:flex-start}
+    .left{width:320px;background:rgba(255,255,255,0.03);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);backdrop-filter:blur(6px)}
+    .avatar{width:140px;height:140px;border-radius:50%;overflow:hidden;margin:0 auto;border:5px solid var(--accent1);display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))}
+    .avatar img{width:100%;height:100%;object-fit:cover}
+    .user-name{text-align:center;color:var(--accent3);font-weight:700;margin-top:10px;font-size:1.1rem}
+    .user-email{text-align:center;color:#cfefff;font-size:0.95rem;margin-top:6px}
+    .btn{display:block;margin:14px auto;padding:10px 14px;border-radius:12px;border:none;color:#fff;background:linear-gradient(135deg,var(--accent1),#b3153a);cursor:pointer;font-weight:700;min-width:140px}
+    .btn.secondary{background:linear-gradient(135deg,#33ccff,#1a9fbf)}
+    .muted{color:#9fbfdf;font-size:0.95rem}
+    .right{flex:1}
+    .section{background:rgba(255,255,255,0.02);padding:16px;border-radius:12px;margin-bottom:14px;border:1px solid rgba(255,255,255,0.03)}
+    .section h3{color:var(--accent2);margin-bottom:8px}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));padding:8px;border-radius:10px;text-align:center;cursor:pointer;border:1px solid rgba(255,255,255,0.03);transition:transform .18s ease, box-shadow .18s ease}
+    .card:hover{transform:translateY(-6px);box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+    .cover{height:150px;border-radius:8px;overflow:hidden;background:#111;display:flex;align-items:center;justify-content:center}
+    .cover img{width:100%;height:100%;object-fit:cover}
+    .book-title{font-size:0.9rem;margin-top:8px;color:#fff}
+    .book-author{font-size:0.82rem;color:#9fbfdf;margin-top:6px}
+
+    .modal-back{position:fixed;inset:0;background:linear-gradient(180deg, rgba(2,6,23,0.85), rgba(2,6,23,0.85));display:none;align-items:center;justify-content:center;z-index:1000}
+    .modal{width:92%;max-width:980px;background:rgba(255,255,255,0.03);padding:18px;border-radius:12px;display:flex;gap:18px;align-items:flex-start}
+    .modal .left{width:320px}.modal .left .cover{height:420px}
+    .close-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff;padding:8px 12px;border-radius:10px;cursor:pointer}
+    .book-meta h2{margin:0;color:var(--accent3);font-family:'Orbitron',sans-serif}
+    .book-meta p{color:#9fbfdf}
+    .controls{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
+    .controls .btn{min-width:140px}
+
+    @media (max-width:900px){
+      .layout{flex-direction:column;padding-bottom:60px}
+      .left{width:100%}
+      .modal{flex-direction:column;padding:12px}
+      .modal .left{width:100%}.modal .left .cover{height:260px}
+    }
+
+
+
+/* Footer */
+  footer {
+    background: rgba(26, 26, 46, 0.9);
+    color: white;
+    text-align: center;
+    padding: 15px;
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+
+/* === Responsive Design for profile.html === */
+
+/* Tablets & small laptops */
+@media (max-width: 1024px) {
+
+  .layout{
+    max-width: 980px;
+    gap: 18px;
+  }
+
+  .left{
+    width: 320px;
+    padding: 16px;
+  }
+
+  .section{
+    padding: 12px 14px;
+  }
+
+  .avatar{
+    width: 150px;
+    height: 150px;
+  }
+}
+
+/* Tablets / large phones in landscape */
+@media (max-width: 900px) {
+
+  .layout{
+    flex-direction: column;
+    max-width: 100%;
+    padding-bottom: 60px;
+  }
+
+  .left{
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  .right{
+    width: 100%;
+  }
+
+  .section{
+    padding: 12px;
+  }
+
+  nav ul{
+    gap: 8px;
+  }
+}
+
+/* Phones */
+@media (max-width: 600px) {
+
+  body{
+    padding: 10px 12px;
+  }
+
+  .nav{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .nav ul{
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .left{
+    padding: 14px;
+  }
+
+  .avatar{
+    width: 130px;
+    height: 130px;
+  }
+
+  .btn{
+    width: 100%;
+    max-width: 220px;
+  }
+
+  .section{
+    padding: 10px;
+  }
+
+  /* BOOKS grid – single row, bigger tiles on phones */
+  #booksGrid{
+    grid-template-rows: 1fr;
+    grid-auto-columns: minmax(140px, 190px);
+  }
+}
+
+/* Very small phones */
+@media (max-width: 400px) {
+
+  .nav ul{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn{
+    max-width: 100%;
+  }
+
+  #booksGrid{
+    grid-auto-columns: minmax(130px, 170px);
+  }
+}
+
+/* ===== RESET & BODY ===== */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+body{
+  font-family:'Rajdhani','Orbitron',sans-serif;
+  background:
+    radial-gradient(circle at 20% 30%, #ff3366 0%, transparent 20%),
+    radial-gradient(circle at 80% 70%, #33ccff 0%, transparent 20%),
+    radial-gradient(circle at 40% 80%, #ffcc00 0%, transparent 20%),
+    linear-gradient(135deg,#050815 0%,#050818 40%,#020818 100%);
+  color:#ffffff;
+  min-height:100vh;
+}
+
+/* ===== TOP NAV BAR (same feel as catalog) ===== */
+.gv-bar{
+  width:100%;
+  background:#050818;
+  padding:10px 40px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.8);
+  box-sizing:border-box;
+}
+.gv-bar-inner{
+  max-width:1200px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.gv-brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.gv-brand-icon{
+  font-size:1.6rem;
+}
+.gv-brand-text{
+  font-family:'Orbitron',sans-serif;
+  font-weight:700;
+  font-size:1rem;
+  letter-spacing:0.08em;
+  color:#ffb52e;
+}
+.gv-menu{
+  display:flex;
+  gap:30px;
+}
+.gv-item{
+  color:#31c9ff;
+  text-decoration:none;
+  font-weight:600;
+  font-size:0.95rem;
+  position:relative;
+  padding:4px 0;
+  transition:color .2s ease;
+}
+.gv-item::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-6px;
+  height:2px;
+  background:linear-gradient(90deg,#ff3366,#33ccff);
+  transform:scaleX(0);
+  transform-origin:center;
+  transition:transform .2s ease;
+}
+.gv-item:hover{
+  color:#ffffff;
+}
+.gv-item:hover::after{
+  transform:scaleX(1);
+}
+
+/* ===== MAIN 2-COLUMN LAYOUT ===== */
+.layout{
+  max-width:1200px;
+  margin:28px auto 32px;
+  display:flex;
+  gap:22px;
+  align-items:flex-start;
+  padding:0 24px;
+}
+
+/* LEFT PROFILE PANEL (card style like catalog boxes) */
+.left{
+  width:320px;
+  background:radial-gradient(circle at 0 0,#3a143a 0,transparent 60%),
+             radial-gradient(circle at 100% 0,#1f3b7a 0,transparent 60%),
+             rgba(8,8,26,0.95);
+  padding:20px 18px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.1);
+  box-shadow:0 20px 40px rgba(0,0,0,0.8);
+}
+.avatar{
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  margin:0 auto;
+  overflow:hidden;
+  border:5px solid #33ccff;
+  box-shadow:0 0 32px rgba(51,204,255,0.7);
+}
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.user-name{
+  text-align:center;
+  margin-top:14px;
+  font-weight:700;
+  font-size:1.25rem;
+  color:#ffcc00;
+}
+.user-email{
+  text-align:center;
+  margin-top:4px;
+  font-size:0.95rem;
+  color:#cfefff;
+}
+.left > div{
+  font-size:0.95rem;
+}
+.btn{
+  display:block;
+  width:100%;
+  margin-top:14px;
+  padding:10px 14px;
+  border-radius:10px;
+  border:none;
+  cursor:pointer;
+  font-weight:700;
+  color:#fff;
+  background:linear-gradient(135deg,#ff3366,#b3153a);
+  box-shadow:0 10px 24px rgba(0,0,0,0.6);
+  transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+}
+.btn.secondary{
+  background:linear-gradient(135deg,#33ccff,#158bb5);
+}
+.btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 14px 30px rgba(0,0,0,0.75);
+  opacity:0.95;
+}
+.muted{
+  color:#9fbfdf;
+}
+
+/* RIGHT CONTENT AREA */
+.right{
+  flex:1;
+}
+
+/* generic content sections – big blue cards like catalog container */
+.section{
+  background:radial-gradient(circle at 0 0,#003b7a 0,transparent 65%),
+             radial-gradient(circle at 100% 0,#0077ff 0,transparent 65%),
+             rgba(6,10,34,0.98);
+  padding:18px 18px 20px;
+  border-radius:16px;
+  margin-bottom:18px;
+  border:1px solid rgba(255,255,255,0.12);
+  box-shadow:0 18px 40px rgba(0,0,0,0.85);
+}
+.section h3{
+  font-family:'Orbitron',sans-serif;
+  font-size:1.1rem;
+  color:#33c9ff;
+  margin-bottom:10px;
+}
+
+/* BOOKS GRID (catalog-style cards) */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:16px;
+}
+.card{
+  background:linear-gradient(145deg,#041235,#020818);
+  border-radius:10px;
+  padding:8px;
+  border:1px solid rgba(0,191,255,0.35);
+  box-shadow:0 14px 30px rgba(0,0,0,0.7);
+  text-align:center;
+  cursor:pointer;
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 18px 40px rgba(0,0,0,0.85);
+}
+.cover{
+  height:180px;
+  border-radius:8px;
+  overflow:hidden;
+  background:#050915;
+}
+.cover img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.book-title{
+  font-size:0.9rem;
+  margin-top:8px;
+  color:#ffffff;
+}
+.book-author{
+  font-size:0.8rem;
+  color:#9fbfdf;
+  margin-top:4px;
+}
+
+/* MODAL */
+.modal-back{
+  position:fixed;
+  inset:0;
+  background:rgba(2,6,23,0.9);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:200;
+}
+.modal{
+  width:92%;
+  max-width:900px;
+  background:rgba(7,12,36,0.98);
+  padding:18px;
+  border-radius:14px;
+  display:flex;
+  gap:18px;
+  box-shadow:0 18px 40px rgba(0,0,0,0.9);
+}
+.modal .left{
+  width:260px;
+  background:transparent;
+  border:none;
+  box-shadow:none;
+}
+.modal .left .cover{
+  height:360px;
+}
+.book-meta h2{
+  color:#ffcc00;
+  font-family:'Orbitron',sans-serif;
+}
+.close-btn{
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.4);
+  border-radius:8px;
+  padding:6px 10px;
+  color:#ffffff;
+  cursor:pointer;
+}
+.controls .btn{
+  width:auto;
+}
+
+/* FOOTER */
+footer{
+  text-align:center;
+  padding:14px;
+  color:#9fbfdf;
+  background:#050818;
+  border-top:1px solid rgba(255,255,255,0.12);
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .layout{
+    flex-direction:column;
+    padding:0 16px 24px;
+  }
+  .left{
+    width:100%;
+  }
+}
+@media(max-width:600px){
+  .gv-bar{
+    padding:8px 16px;
+  }
+  .gv-bar-inner{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:6px;
+  }
+  .gv-menu{
+    flex-wrap:wrap;
+    gap:12px;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+<header class="gv-bar">
+  <div class="gv-bar-inner">
+    <div class="gv-brand">
+      <span class="gv-brand-icon">🎮</span>
+      <span class="gv-brand-text">GAMEVERSE LIBRARY</span>
+    </div>
+
+    <nav class="gv-menu">
+      <a href="homepage.html"    class="gv-item">Home</a>
+      <a href="about.html"   class="gv-item">About</a>
+      <a href="book-catalog.html" class="gv-item">Book-catalog</a>
+      <a href="admin.html"       class="gv-item">Admin</a>
+      <a href="profile.html"     class="gv-item">Your profile</a>
+    </nav>
+  </div>
+</header>
+
+
+
+<div class="layout">
+  <aside class="left">
+    <div class="avatar" id="avatarWrap"><img id="avatarImg" src="" alt="avatar"></div>
+    <div class="user-name" id="userName">Guest</div>
+    <div class="user-email" id="userEmail">guest@example.com</div>
+    <div style="margin-top:12px;background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:#dfefff">
+      <div><strong>Member:</strong> <span id="memberSince">2025</span></div>
+      <div style="margin-top:8px"><strong>Current:</strong> <div id="currentReadingCompact" style="margin-top:6px;color:#9fbfdf">—</div></div>
+    </div>
+    <button class="btn" id="editProfileBtn">Edit Profile</button>
+    <button class="btn secondary" id="logoutBtn">Logout</button>
+  </aside>
+
+  <main class="right">
+    <section class="section">
+      <h3>Current Reading</h3>
+      <button id="addStoriesBtn" class="btn" style="margin-bottom:10px;">Add Stories</button>
+      <div id="currentReadingList" class="muted">No books reading right now.</div>
+    </section>
+
+    <section class="section">
+      <h3>Archived Books</h3>
+      <div id="archivedList" class="muted">No archived books.</div>
+    </section>
+
+    <section class="section">
+  <h3>Create Your Story</h3>
+  <input type="text" id="storyTitleInput" placeholder="Story Title" style="width:100%;margin-bottom:10px;padding:10px;border-radius:8px;border:1px solid #333;background:transparent;color:#fff;">
+  <textarea id="storyInput" style="width:100%;height:110px;border-radius:8px;padding:10px;background:transparent;color:#fff;margin-bottom:10px;border:1px solid #333;" placeholder="Story Description"></textarea>
+  <div style="display:flex;gap:10px;">
+    <button class="btn" id="saveStoryBtn">Save </button>
+    <button class="btn secondary" id="editStoryBtn">Edit</button>
+    <button class="btn" id="viewStoryBtn">View </button>
+    <button class="btn secondary" id="deleteStoryBtn" style="background:#cc1a1a">Delete</button>
+    <span id="storySavedMsg" style="margin-left:12px;color:#9fbfdf;display:none">Saved</span>
+  </div>
+</section>
+
+
+    <section class="section">
+      <h3>Your Favourites</h3>
+      <div class="grid" id="booksGrid"></div>
+    </section>
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="modal-back" id="modalBackdrop">
+  <div class="modal" role="dialog">
+    <div class="left">
+      <div class="cover"><img id="modalCover" src="" style="width:100%;height:100%;object-fit:cover;border-radius:8px" alt=""></div>
+    </div>
+    <div class="right book-meta">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h2 id="modalTitle" style="margin:0"></h2>
+        <button class="close-btn" id="closeModal">Close</button>
+      </div>
+      <p id="modalAuthor" style="color:#9fbfdf;margin-top:8px"></p>
+      <p id="modalDesc" style="margin-top:12px;color:#eaf6ff;line-height:1.45"></p>
+      <div class="controls">
+        <button class="btn" id="addReadingBtn" style="background:linear-gradient(135deg,#33ccff,#1a9fbf)">Add to Current Reading</button>
+        <button class="btn" id="archiveBtn" style="background:linear-gradient(135deg,#ffcc00,#ffb703)">Archive</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+ <!-- Footer -->
+    <footer>
+      <p>&copy; 2025 GameVerse Library. All rights reserved.</p>
+    </footer>
+  </div>
+
+
+
+<script>
+  // ------------ GV helpers (localStorage) ------------
+  const GV = {
+    setUser(user) {
+      if (user.name) localStorage.setItem('gv_username', user.name);
+      if (user.email) localStorage.setItem('gv_email', user.email);
+      if (user.avatar) localStorage.setItem('gv_avatar', user.avatar);
+      if (user.memberSince) localStorage.setItem('gv_member_since', user.memberSince);
+    },
+    getUser() {
+      return {
+        name: localStorage.getItem('gv_username') || null,
+        email: localStorage.getItem('gv_email') || null,
+        avatar: localStorage.getItem('gv_avatar') || null,
+        memberSince: localStorage.getItem('gv_member_since') || null
+      };
+    },
+    logout() {
+      localStorage.removeItem('gv_username');
+      localStorage.removeItem('gv_email');
+      localStorage.removeItem('gv_avatar');
+    },
+    addToCurrentReading(book) {
+      const arr = JSON.parse(localStorage.getItem('gv_current_reading') || '[]');
+      if (!arr.find(b => b.id === book.id)) arr.push(book);
+      localStorage.setItem('gv_current_reading', JSON.stringify(arr));
+    },
+    addToArchived(book) {
+      const arr = JSON.parse(localStorage.getItem('gv_archived') || '[]');
+      if (!arr.find(b => b.id === book.id)) arr.push(book);
+      localStorage.setItem('gv_archived', JSON.stringify(arr));
+    }
+  };
+
+  // ------------ BOOKS WITH IMAGE COVERS ------------
+  // Place your cover images in "images/" folder next to profile.html
+  const BOOKS = [
+    {
+      id: 1,
+      title: "The Lost Kingdom",
+      author: "Ariana Frost",
+      cover: "book-images/book1.jpg",
+      desc: "The Lost Kingdom is a popular title for multiple books, including fantasy adventures about quests for a mythical kingdom and historical novels about empires and political intrigue. "
+    },
+    {
+      id: 2,
+      title: "Shadows of Eternity",
+      author: "Damon Knight",
+      cover: "book-images/book2.jpg",
+      desc: "Shadows of Eternity refers to several books across different genres, including a science fiction novel by Gregory Benford, a vampire romance by Seán Rowan, a YA fantasy by Mukhtar Ali, and a blend of archaeology and mysticism by Eva Collis."
+    },
+    {
+      id: 3,
+      title: "Chronicles of the Iron City",
+      author: "Lara Soren",
+      cover: "book-images/book3.jpg",
+      desc: "Chronicles of the Iron City likely refers to one of several distinct books or series, such as John Donlan's Iron City Trilogy, which is about a city ruled by elites, or a book from Jason Turner's Iron City Chronicles, a detective story."
+      
+    },
+    {
+      id: 4,
+      title: "The Space Voyager",
+      author: "Evan Cole",
+      cover: "book-images/book4.jpg",
+      desc: "The space of voyager likely refers to a specific book, but there are several popular books with Voyager in the title that might be relevant, such as the science fiction novel about a hermit's self-discovery, a non-fiction exploration of the Voyager space probes, or the historical novel about time travel."
+    },
+    {
+      id: 5,
+      title: "Fragments of Tomorrow",
+      author: "Nyla Rivers",
+      cover: "book-images/book5.jpg",
+      desc: "Fragments of Tomorrow is not a single book, but a title for several different works, including a sci-fi thriller by Sanjay Singh, a dystopian short story collection edited by Caitlyn Dawn, a sci-fi epic by an author from Amazon, a psychological novel about war by Sofia Medina, and a poetry collection by Debarpan Dutta."
+    },
+    {
+      id: 6,
+      title: "The Blue Phoenix",
+      author: "Kai Turner ",
+      cover: "book-images/book6.jpg",
+      desc: "The Blue Phoenix can refer to several different books, including a romance novel about corporate politics in Bangalore, a fantasy story about a dragon prince, an isekai-style fantasy novel about a young man reincarnated into a world of cultivation, and a science-fiction story about a galactic battle."
+    },
+    {
+      id: 7,
+      title: "Echoes in The Mist",
+      author: "Rhea Summers",
+      cover: "book-images/book7.jpg",
+      desc: "Echoes in the Mist refers to several different books, most commonly a historical romance by Andrea Kane about a duke's revenge and a forced marriage to his enemy's sister, or a supernatural mystery novel by Adrian Blackwood about a newcomer to a mysterious town who finds a body."
+    },
+    {
+      id: 8,
+      title: "The Quantum Thief",
+      author: "Lytan Grey",
+      cover: "book-images/book8.jpg",
+      desc: "The Quantum Thief is a hard science fiction novel about a master thief named Jean le Flambeur who is pulled from a virtual prison to pull off an impossible heist in a futuristic solar system."
+    },
+    {
+      id: 9,
+      title: "Empire of Glass",
+      author: "Sora Lynn",
+      cover: "book-images/book10.jpg",
+      desc: "Empire of Glass can refer to a few different books, most notably Kaitlin Solimine's novel about an American teenager translating a Chinese family's history, or a fantasy novel by L.R.W. Lee in the God of Secrets series"
+    },
+    {
+      id: 10,
+      title: "Digital Souls",
+      author: "Rex Volter",
+      cover: "book-images/book9.jpg",
+      desc: "Digital Souls: A Philosophy of Online Death by Patrick Stokes explores how to treat online remains of the dead"
+    },
+    {
+      id: 11,
+      title: "The Silent Forest",
+      author: "Mae Winters",
+      cover: "book-images/book11.jpg",
+      desc: "It could be a fantasy horror story about a lost expedition, a non-fiction book about disappearances in the Pacific Northwest, a German thriller about a woman haunted by her father's past, or a psychological thriller about a missing person in a small town. "
+    },
+    {
+      id: 12,
+      title: "Rise of the Necromancer",
+      author: "Orin Black",
+      cover: "book-images/book12.jpg",
+      desc: "Rise of the Necromancer is a title used for multiple fantasy books, often involving a protagonist who must learn to use necromancy to fight a great evil, survive a harsh world, or uncover a dark mystery"
+    },
+    {
+      id: 13,
+      title: "The Celestial Portal",
+      author: "Valen Star",
+      cover: "book-images/book13.jpg",
+      desc: " an anthology of ancient mystical texts called Star Portals & Celestial Journeys: From the Ladder of Jacob to Nag Hammadi, and the fictional series The Celestial Odyssey: Journey Through Portals, which uses portals metaphorically for personal growth. "
+    },
+    {
+      id: 14,
+      title: "SteelHeart Warriors",
+      author: "Hiro Kaze",
+      cover: "book-images/book14.jpg",
+      desc: "The book Steelheart by Brandon Sanderson is a young adult dystopian novel where superpowered individuals, known as Epics, have taken over the world and rule as tyrannical villains."
+    },
+    {
+      id: 15,
+      title: "Dream Walkers",
+      author: "Amaya Frost",
+      cover: "book-images/book15.jpg",
+      desc: "one about a teenager who enters the Astral Realm to fight nightmares and another about a post-apocalyptic civilization where survivors can travel to other worlds to prevent a demonic invasion. There are also urban fantasy and children's versions with varied Dream Walker narratives. "
+    },
+    {
+      id: 16,
+      title: "The Last Oracle",
+      author: "Dante Riven",
+      cover: "book-images/book16.jpg",
+      desc: "The Last Oracle can refer to a James Rollins novel or a different horror novel. The most prominent one is the 2008 James Rollins Sigma Force novel about a conspiracy to bioengineer a new prophet, which involves a relic from the Oracle of Delphi, a secret Cold War project, and a global race against time to prevent an apocalypse. "
+    },
+    {
+      id: 17,
+      title: "Voyage to Aetherion",
+      author: "Luna Rix",
+      cover: "book-images/book17.jpg",
+      desc: "This is an adventurous all-ages novel that blends romance, friendship, and political intrigue in a world with airships. "
+    },
+    {
+      id: 18,
+      title: "The Infinity Cipher",
+      author: "Kade Mercer",
+      cover: "book-images/book18.jpg",
+      desc: "The Infinity Cipher is a 2008 fiction novel by Jan Bish about a love story intertwined with ancient spiritual secrets and a cipher that reveals the eleven dimensions of God's creation."
+    },
+  ];
+
+  // ------------ UI: load user ----------
+  function loadUserToUI() {
+  // Try to get user info saved from login/signup
+  const user = JSON.parse(localStorage.getItem('ol_user') || '{}');
+  document.getElementById('userName').textContent = user.name || 'Guest';
+  document.getElementById('userEmail').textContent = user.email || 'guest@example.com';
+  // For avatars picked from dicebear or file uploads
+  if (user.avatar && user.avatar.trim().length > 5) {
+    document.getElementById('avatarImg').src = user.avatar;
+  } else {
+    // Default placeholder avatar
+    document.getElementById('avatarImg').src = 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect width='100%' height='100%' fill='#111' rx='100'/><text x='50%' y='56%' font-size='36' text-anchor='middle' fill='#fff' font-family='Rajdhani'>A</text></svg>`);
+  }
+  document.getElementById('memberSince').textContent = user.joinDate || new Date().getFullYear();
+}
+
+  loadUserToUI();
+
+  // ------------ Render books grid ----------
+  function renderBooksGrid(){
+    const grid = document.getElementById('booksGrid');
+    grid.innerHTML = '';
+    BOOKS.forEach(book => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="cover"><img src="${book.cover}" alt="${book.title}"></div>
+        <div class="book-title">${book.title}</div>
+        <div class="book-author">${book.author}</div>
+      `;
+      card.addEventListener('click', ()=> openModalForBook(book.id));
+      grid.appendChild(card);
+    });
+  }
+  renderBooksGrid();
+
+  // ------------ Modal logic ----------
+  const modalBackdrop = document.getElementById('modalBackdrop');
+  const modalCover = document.getElementById('modalCover');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalAuthor = document.getElementById('modalAuthor');
+  const modalDesc = document.getElementById('modalDesc');
+  let activeBook = null;
+
+  function getBookById(id){
+    return BOOKS.find(b=> Number(b.id) === Number(id)) || null;
+  }
+
+  function openModalForBook(id){
+    activeBook = getBookById(id);
+    if(!activeBook) return;
+    modalCover.src = activeBook.cover;
+    modalTitle.textContent = activeBook.title;
+    modalAuthor.textContent = 'By ' + activeBook.author;
+    modalDesc.textContent = activeBook.desc;
+    modalBackdrop.style.display = 'flex';
+  }
+
+  document.getElementById('closeModal').onclick = () => modalBackdrop.style.display = 'none';
+  modalBackdrop.addEventListener('click', (e) => { if(e.target === modalBackdrop) modalBackdrop.style.display = 'none'; });
+
+  // ------------ Add to reading / archive ----------
+  document.getElementById('addReadingBtn').onclick = () => {
+    if(!activeBook) return alert('No book selected');
+    GV.addToCurrentReading(activeBook);
+    updateReadingUI();
+    alert('Added to Current Reading');
+  };
+  document.getElementById('archiveBtn').onclick = () => {
+    if(!activeBook) return alert('No book selected');
+    GV.addToArchived(activeBook);
+    updateArchivedUI();
+    alert('Book archived');
+  };
+
+  // ------------ Update reading / archived lists ----------
+  function updateReadingUI(){
+  const cr = JSON.parse(localStorage.getItem('gv_current_reading') || '[]');
+  const el = document.getElementById('currentReadingList');
+  if(cr.length === 0) el.textContent = 'No books reading right now.';
+  else el.innerHTML = cr.map((b,idx) =>
+    `<div style="margin-bottom:8px">
+      <strong>${b.title}</strong> — <span style="color:#9fbfdf">${b.author}</span>
+      <button onclick="removeCurrentBook(${idx})" style="margin-left:8px;color:#fff;background:#d44;padding:2px 8px;border-radius:6px;border:none;cursor:pointer">Remove</button>
+    </div>`).join('');
+  document.getElementById('currentReadingCompact').textContent = cr.length ? cr[0].title : '—';
+}
+
+function updateArchivedUI(){
+  const ar = JSON.parse(localStorage.getItem('gv_archived') || '[]');
+  const el = document.getElementById('archivedList');
+  if(ar.length === 0) el.textContent = 'No archived books.';
+  else el.innerHTML = ar.map((b,idx) =>
+    `<div style="margin-bottom:8px">
+      <strong>${b.title}</strong> — <span style="color:#9fbfdf">${b.author}</span>
+      <button onclick="removeArchiveBook(${idx})" style="margin-left:8px;color:#fff;background:#d44;padding:2px 8px;border-radius:6px;border:none;cursor:pointer">Remove</button>
+    </div>`).join('');
+}
+
+  updateReadingUI();
+  updateArchivedUI();
+
+function removeCurrentBook(idx) {
+  let arr = JSON.parse(localStorage.getItem('gv_current_reading') || '[]');
+  arr.splice(idx, 1);
+  localStorage.setItem('gv_current_reading', JSON.stringify(arr));
+  updateReadingUI();
+}
+function removeArchiveBook(idx) {
+  let arr = JSON.parse(localStorage.getItem('gv_archived') || '[]');
+  arr.splice(idx, 1);
+  localStorage.setItem('gv_archived', JSON.stringify(arr));
+  updateArchivedUI();
+}
+
+  // ------------ Save story ------------
+ // Save story
+document.getElementById('saveStoryBtn').onclick = function() {
+  const title = document.getElementById('storyTitleInput').value.trim();
+  const desc = document.getElementById('storyInput').value.trim();
+  if (!title && !desc) {
+    alert('Please enter a story title or description!');
+    return;
+  }
+  localStorage.setItem('gv_user_story', JSON.stringify({title, desc}));
+  document.getElementById('storySavedMsg').style.display = 'inline';
+  setTimeout(() => {
+    document.getElementById('storySavedMsg').style.display = 'none';
+  }, 2000);
+};
+
+// Edit story (fills inputs for editing)
+document.getElementById('editStoryBtn').onclick = function() {
+  const story = JSON.parse(localStorage.getItem('gv_user_story') || '{}');
+  document.getElementById('storyTitleInput').value = story.title || "";
+  document.getElementById('storyInput').value = story.desc || "";
+};
+
+// View story
+document.getElementById('viewStoryBtn').onclick = function() {
+  const story = JSON.parse(localStorage.getItem('gv_user_story') || '{}');
+  if (!story.title && !story.desc) {
+    alert('No story saved yet!');
+    return;
+  }
+  let storyModal = document.getElementById('storyModal');
+  if (!storyModal) {
+    storyModal = document.createElement('div');
+    storyModal.id = 'storyModal';
+    storyModal.style = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;z-index:1111;';
+    storyModal.innerHTML = `<div style="background:#222;padding:28px;border-radius:16px;min-width:320px;max-width:90vw;color:#fff;position:relative;">
+      <button onclick="this.parentNode.parentNode.remove()" style="position:absolute;top:8px;right:10px;background:#333;border:none;color:#fff;border-radius:8px;padding:4px 12px;font-weight:700;cursor:pointer;">Close</button>
+      <h2 style="margin-bottom:12px;">${story.title || "(No Title)"}</h2>
+      <div style="white-space:pre-line;font-size:1.07rem;">${story.desc || "(No Description)"}</div>
+    </div>`;
+    document.body.appendChild(storyModal);
+  }
+};
+
+// Delete story
+document.getElementById('deleteStoryBtn').onclick = function() {
+  if (confirm("Are you sure you want to delete your story?")) {
+    localStorage.removeItem('gv_user_story');
+    document.getElementById('storyTitleInput').value = "";
+    document.getElementById('storyInput').value = "";
+    alert('Story deleted.');
+  }
+};
+
+
+  // ------------ Edit profile (name,email,avatar) ------------
+  document.getElementById('editProfileBtn').onclick = () => {
+    const u = GV.getUser();
+    const newName = prompt('Enter name', u.name || '');
+    if(newName !== null){
+      localStorage.setItem('gv_username', newName);
+      document.getElementById('userName').textContent = newName;
+    }
+    const newEmail = prompt('Enter email', u.email || '');
+    if(newEmail !== null){
+      localStorage.setItem('gv_email', newEmail);
+      document.getElementById('userEmail').textContent = newEmail;
+    }
+
+    if(confirm('Change avatar? Click OK to pick a file.')) {
+      const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
+      input.onchange = function(){
+        const file = input.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = function(){
+          localStorage.setItem('gv_avatar', reader.result);
+          document.getElementById('avatarImg').src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      };
+      input.click();
+    }
+  };
+
+  // ------------ Logout ------------
+  document.getElementById('logoutBtn').onclick = () => {
+    GV.logout();
+    window.location.href = 'login.html';
+  };
+
+  // ------------ Ensure demo user if none ------------
+  (function ensureDemoUser(){
+    if(!localStorage.getItem('gv_username')){
+      GV.setUser({ name:'Guest', email:'guest@example.com', avatar:null, memberSince: new Date().getFullYear() });
+    }
+    loadUserToUI();
+  })();
+
+
+  document.getElementById('addStoriesBtn').onclick = function() {
+  window.location.href = "book-catlog.html";  // Change file name if your books page is different
+};
+
+</script>
+</body>
+</html>

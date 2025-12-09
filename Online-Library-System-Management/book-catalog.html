@@ -1,0 +1,2620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GameVerse Library — Book Catalog</title>
+<link rel="stylesheet" href="./responsive.css">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Rajdhani', 'Orbitron', sans-serif;
+    background: 
+      radial-gradient(circle at 20% 30%, #ff3366 0%, transparent 20%),
+      radial-gradient(circle at 80% 70%, #33ccff 0%, transparent 20%),
+      radial-gradient(circle at 40% 80%, #ffcc00 0%, transparent 20%),
+      linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+    color: #ffffff;
+    display: flex;
+    min-height: 100vh;
+    animation: backgroundPulse 15s ease-in-out infinite;
+  }
+
+  @keyframes backgroundPulse {
+    0%, 100% { 
+      background: 
+        radial-gradient(circle at 20% 30%, #ff3366 0%, transparent 20%),
+        radial-gradient(circle at 80% 70%, #33ccff 0%, transparent 20%),
+        radial-gradient(circle at 40% 80%, #ffcc00 0%, transparent 20%),
+        linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+    }
+    33% { 
+      background: 
+        radial-gradient(circle at 80% 30%, #33ccff 0%, transparent 20%),
+        radial-gradient(circle at 40% 70%, #ffcc00 0%, transparent 20%),
+        radial-gradient(circle at 20% 80%, #ff3366 0%, transparent 20%),
+        linear-gradient(225deg, #0f0f1a 0%, #1a1a2e 100%);
+    }
+    66% { 
+      background: 
+        radial-gradient(circle at 40% 30%, #ffcc00 0%, transparent 20%),
+        radial-gradient(circle at 20% 70%, #ff3366 0%, transparent 20%),
+        radial-gradient(circle at 80% 80%, #33ccff 0%, transparent 20%),
+        linear-gradient(315deg, #0f0f1a 0%, #1a1a2e 100%);
+    }
+  }
+
+  /* Sidebar Profile Section - 20vw - FIXED */
+  .sidebar {
+    width: 20vw;
+    background: rgba(42, 26, 74, 0.9);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    box-shadow: 2px 0 20px rgba(0,0,0,0.5);
+    animation: slideInLeft 0.8s ease-out;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .sidebar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ff3366, #33ccff, #ffcc00);
+    animation: headerScan 3s linear infinite;
+  }
+
+  @keyframes headerScan {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  .profile {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .profile img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid #33ccff;
+    box-shadow: 0 0 25px rgba(51, 204, 255, 0.6);
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+  }
+
+  .profile img:hover {
+    transform: scale(1.05) rotate(5deg);
+    box-shadow: 0 0 35px rgba(51, 204, 255, 0.8);
+  }
+
+  .profile h2 {
+    margin-top: 15px;
+    font-size: 1.4rem;
+    color: #ffcc00;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+  }
+
+  .profile-info {
+    margin-top: 20px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .profile-info p {
+    margin: 10px 0;
+    padding: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 5px;
+    border-left: 3px solid #ff3366;
+    transition: transform 0.3s ease;
+  }
+
+  .profile-info p:hover {
+    transform: translateX(5px);
+  }
+
+  .btn {
+    margin-top: 25px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #ff3366, #cc1a4a);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn:hover {
+    background: linear-gradient(135deg, #ff1a53, #b3153a);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4);
+  }
+
+  /* Main Content Area - 80vw */
+  .main-content {
+    width: 80vw;
+    display: flex;
+    flex-direction: column;
+    animation: slideInRight 0.8s ease-out;
+    margin-left: 20vw;
+  }
+
+     .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: #1a1a2e;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+        }
+
+        /* Navbar Container */
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Logo */
+        .nav-logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Navigation Menu */
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background-color: #2a2a3e;
+            color: #4cc9f0;
+        }
+
+        /* Hamburger Menu (for mobile) */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 70px; /* Adjust based on navbar height */
+                right: -100%;
+                flex-direction: column;
+                background-color: #1a1a2e;
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+                padding: 20px 0;
+                gap: 0;
+            }
+
+            .nav-menu.active {
+                right: 0;
+            }
+
+            .nav-link {
+                padding: 15px;
+                display: block;
+                width: 100%;
+            }
+        }
+
+        /* Body styles for demo */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #0f0f1a;
+            color: white;
+            min-height: 2000px; /* For scrolling demo */
+        }
+
+        /* Content area
+        .content {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        } */
+  /* Body Content */
+  .content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+    color: #ffcc00;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ff3366;
+    padding-bottom: 10px;
+    animation: fadeIn 1s ease-out;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+    font-family: 'Orbitron', sans-serif;
+  }
+
+  /* Search and Filter Section */
+  .search-filter {
+    background: rgba(42, 42, 74, 0.7);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    margin-bottom: 30px;
+    animation: fadeInUp 0.8s ease-out;
+    border: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+  }
+
+  .search-filter::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ff3366, #33ccff, #ffcc00);
+  }
+
+  .search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .search-box input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid #33ccff;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: rgba(30, 30, 50, 0.8);
+    color: white;
+  }
+
+  .search-box input:focus {
+    outline: none;
+    border-color: #ffcc00;
+    box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .search-btn {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #ff3366, #cc1a4a);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .search-btn:hover {
+    background: linear-gradient(135deg, #ff1a53, #b3153a);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 51, 102, 0.4);
+  }
+
+  .filter-options {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  .filter-select {
+    padding: 10px;
+    border: 1px solid #33ccff;
+    border-radius: 8px;
+    background: rgba(30, 30, 50, 0.8);
+    color: white;
+    min-width: 150px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .filter-select:focus {
+    outline: none;
+    border-color: #ffcc00;
+    box-shadow: 0 0 0 2px rgba(255, 204, 0, 0.3);
+  }
+
+  /* Books Counter */
+  .books-counter {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+  }
+
+  .counter-item {
+    background: rgba(42, 42, 74, 0.7);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    text-align: center;
+    flex: 1;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .counter-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(255, 51, 102, 0.3);
+  }
+
+  .counter-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #ffcc00;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+  }
+
+  .counter-item:hover .counter-number {
+    transform: scale(1.1);
+  }
+
+  .counter-label {
+    color: #cccccc;
+    font-size: 0.9rem;
+  }
+
+  /* Books Grid - Smaller Cards */
+  .books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .book-card {
+    background: rgba(42, 42, 74, 0.7);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    transition: all 0.4s ease;
+    animation: fadeInUp 0.6s ease-out;
+    animation-fill-mode: both;
+    position: relative;
+    opacity: 0;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .book-card:nth-child(1) { animation-delay: 0.1s; }
+  .book-card:nth-child(2) { animation-delay: 0.2s; }
+  .book-card:nth-child(3) { animation-delay: 0.3s; }
+  .book-card:nth-child(4) { animation-delay: 0.4s; }
+  .book-card:nth-child(5) { animation-delay: 0.5s; }
+  .book-card:nth-child(6) { animation-delay: 0.6s; }
+  .book-card:nth-child(7) { animation-delay: 0.7s; }
+  .book-card:nth-child(8) { animation-delay: 0.8s; }
+  .book-card:nth-child(9) { animation-delay: 0.9s; }
+  .book-card:nth-child(10) { animation-delay: 1s; }
+
+  .book-card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 20px 40px rgba(255, 51, 102, 0.3);
+  }
+
+  .book-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #ff3366, #33ccff, #ffcc00);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+
+  .book-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .book-image {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+    transition: all 0.4s ease;
+  }
+
+  .book-card:hover .book-image {
+    transform: scale(1.1);
+  }
+
+  .book-info {
+    padding: 15px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .book-title {
+    font-size: 1rem;
+    color: #ffffff;
+    margin-bottom: 6px;
+    font-weight: 600;
+    line-height: 1.3;
+    transition: color 0.3s ease;
+  }
+
+  .book-card:hover .book-title {
+    color: #ffcc00;
+  }
+
+  .book-author {
+    color: #cccccc;
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+  }
+
+  .book-genre {
+    display: inline-block;
+    background: rgba(255, 51, 102, 0.2);
+    color: #ffcc00;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    margin-bottom: 8px;
+    border: 1px solid rgba(255, 204, 0, 0.3);
+  }
+
+  .book-price {
+    color: #33ccff;
+    font-weight: 600;
+    margin: 5px 0;
+    font-size: 0.9rem;
+    text-shadow: 0 0 5px rgba(51, 204, 255, 0.3);
+  }
+
+  .book-availability {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .availability-status {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .available {
+    background: rgba(76, 175, 80, 0.3);
+    color: #4caf50;
+    border: 1px solid rgba(76, 175, 80, 0.3);
+  }
+
+  .unavailable {
+    background: rgba(244, 67, 54, 0.3);
+    color: #f44336;
+    border: 1px solid rgba(244, 67, 54, 0.3);
+  }
+
+  .view-btn {
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #ff3366, #cc1a4a);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+  }
+
+  .view-btn:hover {
+    background: linear-gradient(135deg, #ff1a53, #b3153a);
+    transform: scale(1.05);
+  }
+
+  /* Book Details Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .modal-content {
+    background: rgba(42, 42, 74, 0.95);
+    border-radius: 15px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 15px 40px rgba(255, 51, 102, 0.3);
+    animation: modalSlideIn 0.4s ease;
+    border: 2px solid #ff3366;
+    backdrop-filter: blur(10px);
+  }
+
+  @keyframes modalSlideIn {
+    from {
+      opacity: 0;
+      transform: scale(0.8) translateY(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .modal-header {
+    background: linear-gradient(90deg, #ff3366, #cc1a4a);
+    color: white;
+    padding: 20px;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .close-btn:hover {
+    transform: rotate(90deg);
+  }
+
+  .modal-body {
+    padding: 30px;
+    display: flex;
+    gap: 30px;
+  }
+
+  .modal-book-image {
+    width: 200px;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+    border: 2px solid #33ccff;
+  }
+
+  .modal-book-image:hover {
+    transform: scale(1.05);
+  }
+
+  .modal-book-details {
+    flex: 1;
+  }
+
+  .modal-book-title {
+    font-size: 1.8rem;
+    color: #ffcc00;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+  }
+
+  .modal-book-author {
+    font-size: 1.2rem;
+    color: #33ccff;
+    margin-bottom: 15px;
+  }
+
+  .book-meta {
+    margin: 20px 0;
+  }
+
+  .meta-item {
+    margin-bottom: 10px;
+    display: flex;
+    transition: transform 0.3s ease;
+  }
+
+  .meta-item:hover {
+    transform: translateX(5px);
+  }
+
+  .meta-label {
+    font-weight: 600;
+    width: 100px;
+    color: #ffcc00;
+  }
+
+  .book-description {
+    line-height: 1.6;
+    margin: 20px 0;
+    color: #cccccc;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+  }
+
+  .borrow-btn, .reserve-btn, .premium-btn, .play-btn, .request-btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .borrow-btn {
+    background: linear-gradient(135deg, #ff3366, #cc1a4a);
+    color: white;
+  }
+
+  .borrow-btn:hover {
+    background: linear-gradient(135deg, #ff1a53, #b3153a);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4);
+  }
+
+  .reserve-btn {
+    background: linear-gradient(135deg, #33ccff, #1a99cc);
+    color: white;
+  }
+
+  .reserve-btn:hover {
+    background: linear-gradient(135deg, #1a99cc, #147399);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(51, 204, 255, 0.4);
+  }
+
+  .premium-btn {
+    background: linear-gradient(135deg, #ffcc00, #cc9900);
+    color: #1a1a2e;
+  }
+
+  .premium-btn:hover {
+    background: linear-gradient(135deg, #e6b800, #b38600);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 204, 0, 0.4);
+  }
+
+  .play-btn {
+    background: linear-gradient(135deg, #00cc66, #00994d);
+    color: white;
+  }
+
+  .play-btn:hover {
+    background: linear-gradient(135deg, #00b359, #008040);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 204, 102, 0.4);
+  }
+
+  .request-btn {
+    background: linear-gradient(135deg, #ff6633, #cc4d26);
+    color: white;
+  }
+
+  .request-btn:hover {
+    background: linear-gradient(135deg, #e65c2e, #b3471f);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 102, 51, 0.4);
+  }
+
+  /* Form Modals */
+  .borrow-form-modal, .request-modal, .payment-modal, .success-modal, .premium-modal, .download-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 1001;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .borrow-form-content, .request-form-content, .payment-content, .success-content, .premium-content, .download-content {
+    background: rgba(42, 42, 74, 0.95);
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 15px 40px rgba(255, 51, 102, 0.3);
+    animation: modalSlideIn 0.4s ease;
+    border: 2px solid #33ccff;
+    backdrop-filter: blur(10px);
+  }
+
+  .borrow-form-header, .request-form-header, .payment-header {
+    background: linear-gradient(90deg, #33ccff, #1a99cc);
+    color: white;
+    padding: 20px;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .borrow-form-body, .request-form-body, .payment-body {
+    padding: 30px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #ffcc00;
+  }
+
+  .form-group input, .form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #33ccff;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: rgba(30, 30, 50, 0.8);
+    color: white;
+  }
+
+  .form-group input:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: #ffcc00;
+    box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.3);
+  }
+
+  .submit-borrow-btn, .submit-request-btn, .pay-now-btn, .success-btn, .download-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #ff3366, #cc1a4a);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+  }
+
+  .submit-borrow-btn:hover, .submit-request-btn:hover, .pay-now-btn:hover, .success-btn:hover, .download-btn:hover {
+    background: linear-gradient(135deg, #ff1a53, #b3153a);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4);
+  }
+
+  /* Payment Options */
+  .payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+  }
+
+  .payment-option {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid rgba(51, 204, 255, 0.3);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(30, 30, 50, 0.6);
+  }
+
+  .payment-option:hover {
+    border-color: #ffcc00;
+    background: rgba(42, 42, 74, 0.8);
+  }
+
+  .payment-option.selected {
+    border-color: #ffcc00;
+    background: rgba(42, 42, 74, 0.9);
+  }
+
+  .payment-icon {
+    font-size: 1.5rem;
+    margin-right: 15px;
+  }
+
+  .payment-details {
+    flex: 1;
+  }
+
+  .payment-title {
+    font-weight: 600;
+    color: #ffcc00;
+    margin-bottom: 5px;
+  }
+
+  .payment-description {
+    font-size: 0.9rem;
+    color: #cccccc;
+  }
+
+  /* Success Modal */
+  .success-content {
+    text-align: center;
+    padding: 40px 30px;
+  }
+
+  .success-icon {
+    font-size: 4rem;
+    color: #4CAF50;
+    margin-bottom: 20px;
+    animation: bounce 1s ease infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .success-title {
+    font-size: 1.8rem;
+    color: #ffcc00;
+    margin-bottom: 15px;
+  }
+
+  .success-message {
+    color: #cccccc;
+    margin-bottom: 25px;
+    line-height: 1.6;
+  }
+
+  /* Premium Features - IMPROVED STYLING */
+  .premium-content {
+    background: rgba(42, 42, 74, 0.95);
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 15px 40px rgba(255, 204, 0, 0.3);
+    animation: modalSlideIn 0.4s ease;
+    border: 2px solid #ffcc00;
+    backdrop-filter: blur(10px);
+    text-align: center;
+    padding: 30px;
+  }
+
+  .premium-icon {
+    font-size: 4rem;
+    color: #ffcc00;
+    margin-bottom: 20px;
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  .premium-title {
+    font-size: 1.8rem;
+    color: #ffcc00;
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+  }
+
+  .premium-description {
+    color: #cccccc;
+    margin-bottom: 25px;
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+
+  .premium-features {
+    text-align: left;
+    margin: 25px 0;
+    padding: 20px;
+    background: rgba(42, 42, 74, 0.7);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 204, 0, 0.3);
+  }
+
+  .premium-features h3 {
+    color: #ffcc00;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 1.2rem;
+  }
+
+  .premium-features ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .premium-features li {
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+    color: #cccccc;
+    font-size: 0.9rem;
+  }
+
+  .premium-features li::before {
+    content: "✓";
+    color: #4CAF50;
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: 1.1rem;
+  }
+
+  .premium-action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 25px 0;
+  }
+
+  /* Footer */
+  footer {
+    background: rgba(26, 26, 46, 0.9);
+    color: white;
+    text-align: center;
+    padding: 15px;
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  /* Profile settings panel */
+  .settings {
+    display: none;
+    margin-top: 30px;
+    width: 100%;
+    padding: 20px;
+    background: rgba(42, 42, 74, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.3);
+    text-align: left;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .settings::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #33ccff, #ffcc00);
+  }
+
+  .settings h3 {
+    text-align: center;
+    color: #ffcc00;
+    margin-bottom: 10px;
+    text-shadow: 0 0 5px rgba(255, 204, 0, 0.3);
+  }
+
+  input, textarea {
+    width: 100%;
+    margin: 8px 0;
+    padding: 10px;
+    border: 1px solid rgba(51, 204, 255, 0.3);
+    border-radius: 6px;
+    background: rgba(30, 30, 50, 0.8);
+    color: white;
+  }
+
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: #33ccff;
+    box-shadow: 0 0 10px rgba(51, 204, 255, 0.3);
+  }
+
+  .save-btn {
+    background: linear-gradient(135deg, #00ff99, #00cc7a);
+    color: white;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .save-btn:hover {
+    background: linear-gradient(135deg, #00e68a, #00b36b);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 153, 0.3);
+  }
+
+  .logout {
+    margin-top: 15px;
+    color: #ff6666;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .logout:hover {
+    color: #ff3333;
+    text-shadow: 0 0 5px rgba(255, 102, 102, 0.5);
+  }
+
+  /* Animation Keyframes */
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    body {
+      flex-direction: column;
+    }
+    
+    .sidebar {
+      width: 100%;
+      height: auto;
+      position: relative;
+    }
+    
+    .main-content {
+      width: 100%;
+      margin-left: 0;
+    }
+    
+    nav ul {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .modal-body {
+      flex-direction: column;
+    }
+    
+    .modal-book-image {
+      width: 100%;
+      max-width: 200px;
+      margin: 0 auto;
+    }
+    
+    .filter-options {
+      flex-direction: column;
+    }
+    
+    .books-grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+    }
+    
+    .book-image {
+      height: 120px;
+    }
+    
+    .action-buttons {
+      flex-direction: column;
+    }
+    
+    .borrow-btn, .reserve-btn, .premium-btn, .play-btn, .request-btn {
+      width: 100%;
+    }
+
+    .premium-action-buttons {
+      flex-direction: column;
+    }
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Sidebar Profile Section (20vw) -->
+  <div class="sidebar">
+    <div class="profile" id="profile">
+      <img id="avatar" src="" alt="User Avatar" />
+      <h2 id="userName">User Name</h2>
+      
+      <div class="profile-info">
+        <p><strong>Email:</strong> <span id="userEmail">user@example.com</span></p>
+        <p><strong>Phone:</strong> <span id="userPhone">+1234567890</span></p>
+        <p><strong>Member Since:</strong> <span id="memberSince">2023</span></p>
+      </div>
+      
+      <button class="btn" onclick="toggleSettings()">Profile Settings ⚙️</button>
+    </div>
+
+    <div class="settings" id="settings">
+      <h3>Profile Settings</h3>
+      <label>Name:</label>
+      <input type="text" id="editName" />
+      <label>Email:</label>
+      <input type="email" id="editEmail" />
+      <label>Phone:</label>
+      <input type="text" id="editPhone" />
+      <button class="save-btn" onclick="saveProfile()">💾 Save Changes</button>
+      <div class="logout" onclick="logout()">🚪 Logout</div>
+    </div>
+  </div>
+
+  <!-- Main Content Area (80vw) -->
+  <div class="main-content">
+    <!-- Header/Navbar -->
+   <nav class="navbar">
+    <div class="nav-container">
+        <a href="homepage.html" class="nav-logo">🎮  GameVerse Library!</a>
+
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+          
+        <ul class="nav-menu">
+            <li><a href="homepage.html" class="nav-link">Home</a></li>      
+            <li><a href="book-catalog.html" class="nav-link">Book-Catlog</a></li>
+            <li><a href="admin.html" class="nav-link">Admin</a></li>
+            <li><a href="./about.html" class="nav-link">About</a></li>
+            <li><a href="./profile.html" class="nav-link">Your Profile</a></li>
+        </ul>
+    </div>
+</nav>
+
+
+
+    <!-- Body Content -->
+    <div class="content">
+      <h2 class="section-title">Book Catalog</h2>
+      
+      <!-- Search and Filter Section -->
+      <div class="search-filter">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search books by title, author, or genre...">
+          <button class="search-btn" onclick="searchBooks()">🔍 Search</button>
+        </div>
+        
+        <div class="filter-options">
+          <select class="filter-select" id="genreFilter" onchange="filterBooks()">
+            <option value="">All Genres</option>
+            <option value="Fiction">Fiction</option>
+            <option value="Science">Science</option>
+            <option value="History">History</option>
+            <option value="Biography">Biography</option>
+            <option value="Technology">Technology</option>
+            <option value="Fantasy">Fantasy</option>
+            <option value="Mystery">Mystery</option>
+            <option value="Romance">Romance</option>
+            <option value="Horror">Horror</option>
+            <option value="Psychology">Psychology</option>
+            <option value="Science Fiction">Science Fiction</option>
+            <option value="Historical Fiction">Historical Fiction</option>
+          </select>
+          
+          <select class="filter-select" id="authorFilter" onchange="filterBooks()">
+            <option value="">All Authors</option>
+            <!-- Authors will be dynamically loaded -->
+          </select>
+          
+          <select class="filter-select" id="yearFilter" onchange="filterBooks()">
+            <option value="">All Years</option>
+            <!-- Years will be dynamically loaded -->
+          </select>
+        </div>
+      </div>
+      
+      <!-- Books Counter -->
+      <div class="books-counter">
+        <div class="counter-item">
+          <div class="counter-number" id="totalBooks">24</div>
+          <div class="counter-label">Total Books</div>
+        </div>
+        <div class="counter-item">
+          <div class="counter-number" id="availableBooks">19</div>
+          <div class="counter-label">Available Now</div>
+        </div>
+        <div class="counter-item">
+          <div class="counter-number" id="borrowedBooks">5</div>
+          <div class="counter-label">Currently Borrowed</div>
+        </div>
+      </div>
+      
+      <!-- Books Grid -->
+      <div class="books-grid" id="booksGrid">
+        <!-- Books will be dynamically loaded here -->
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>&copy; 2025 GameVerse Library. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- Book Details Modal -->
+  <div class="modal" id="bookModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Book Details</h3>
+        <button class="close-btn" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <img id="modalBookImage" src="" alt="Book Cover" class="modal-book-image">
+        <div class="modal-book-details">
+          <h2 id="modalBookTitle" class="modal-book-title">Book Title</h2>
+          <h3 id="modalBookAuthor" class="modal-book-author">Author Name</h3>
+          
+          <div class="book-meta">
+            <div class="meta-item">
+              <span class="meta-label">ISBN:</span>
+              <span id="modalBookISBN">978-3-16-148410-0</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Genre:</span>
+              <span id="modalBookGenre">Fiction</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Year:</span>
+              <span id="modalBookYear">2023</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Pages:</span>
+              <span id="modalBookPages">320</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Status:</span>
+              <span id="modalBookStatus" class="availability-status available">Available</span>
+            </div>
+          </div>
+          
+          <div class="book-description" id="modalBookDescription">
+            Book description will appear here...
+          </div>
+          
+          <div class="action-buttons" id="actionButtons">
+            <!-- Buttons will be dynamically loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- All other modals (Borrow Form, Request Form, Payment, Success, Premium, Download) -->
+  <!-- Borrow Form Modal -->
+  <div class="borrow-form-modal" id="borrowFormModal">
+    <div class="borrow-form-content">
+      <div class="borrow-form-header">
+        <h3>Borrow Book Form</h3>
+        <button class="close-btn" onclick="closeBorrowForm()">×</button>
+      </div>
+      <div class="borrow-form-body">
+        <form id="borrowForm">
+          <div class="form-group">
+            <label for="borrowUsername">Username:</label>
+            <input type="text" id="borrowUsername" required>
+          </div>
+          <div class="form-group">
+            <label for="borrowBookTopic">Book Topic/Title:</label>
+            <input type="text" id="borrowBookTopic" readonly>
+          </div>
+          <div class="form-group">
+            <label for="borrowAuthor">Author Name:</label>
+            <input type="text" id="borrowAuthor" readonly>
+          </div>
+          <div class="form-group">
+            <label for="borrowDate">Borrow Date:</label>
+            <input type="date" id="borrowDate" required>
+          </div>
+          <div class="form-group">
+            <label for="returnDate">Return Date:</label>
+            <input type="date" id="returnDate" required>
+          </div>
+          <div class="form-group">
+            <label for="borrowPhone">Phone Number:</label>
+            <input type="tel" id="borrowPhone" required>
+          </div>
+          <button type="submit" class="submit-borrow-btn">Submit Borrow Request</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Request Form Modal -->
+  <div class="request-modal" id="requestModal">
+    <div class="request-form-content">
+      <div class="request-form-header">
+        <h3>Request Book</h3>
+        <button class="close-btn" onclick="closeRequestForm()">×</button>
+      </div>
+      <div class="request-form-body">
+        <form id="requestForm">
+          <div class="form-group">
+            <label for="requestUsername">Username:</label>
+            <input type="text" id="requestUsername" required>
+          </div>
+          <div class="form-group">
+            <label for="requestBookTitle">Book Title:</label>
+            <input type="text" id="requestBookTitle" readonly>
+          </div>
+          <div class="form-group">
+            <label for="requestAuthor">Author:</label>
+            <input type="text" id="requestAuthor" readonly>
+          </div>
+          <div class="form-group">
+            <label for="requestGenre">Genre:</label>
+            <input type="text" id="requestGenre" readonly>
+          </div>
+          <div class="form-group">
+            <label for="requestReason">Reason for Request:</label>
+            <textarea id="requestReason" rows="4" placeholder="Why do you want this book?" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="requestPhone">Phone Number:</label>
+            <input type="tel" id="requestPhone" required>
+          </div>
+          <button type="submit" class="submit-request-btn">Submit Request</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div class="payment-modal" id="paymentModal">
+    <div class="payment-content">
+      <div class="payment-header">
+        <h3>Payment Process</h3>
+        <button class="close-btn" onclick="closePaymentModal()">×</button>
+      </div>
+      <div class="payment-body">
+        <h4>Select Payment Method</h4>
+        <div class="payment-options">
+          <div class="payment-option" onclick="selectPayment('netbanking')">
+            <div class="payment-icon">🏦</div>
+            <div class="payment-details">
+              <div class="payment-title">Net Banking</div>
+              <div class="payment-description">Pay using your bank account</div>
+            </div>
+          </div>
+          <div class="payment-option" onclick="selectPayment('upi')">
+            <div class="payment-icon">📱</div>
+            <div class="payment-details">
+              <div class="payment-title">UPI Payment</div>
+              <div class="payment-description">Pay using UPI apps</div>
+            </div>
+          </div>
+          <div class="payment-option" onclick="selectPayment('credit')">
+            <div class="payment-icon">💳</div>
+            <div class="payment-details">
+              <div class="payment-title">Credit Card</div>
+              <div class="payment-description">Pay using credit card</div>
+            </div>
+          </div>
+          <div class="payment-option" onclick="selectPayment('cash')">
+            <div class="payment-icon">💵</div>
+            <div class="payment-details">
+              <div class="payment-title">Cash on Delivery</div>
+              <div class="payment-description">Pay when book is delivered</div>
+            </div>
+          </div>
+        </div>
+        <button class="pay-now-btn" id="payNowBtn" onclick="processPayment()">Pay Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="success-modal" id="successModal">
+    <div class="success-content">
+      <div class="success-icon">✅</div>
+      <h2 class="success-title">Payment Successful!</h2>
+      <p class="success-message" id="successMessage">
+        Your book has been successfully borrowed. You will receive a confirmation email shortly.
+      </p>
+      <button class="success-btn" onclick="closeSuccessModal()">Continue Browsing</button>
+    </div>
+  </div>
+
+  <!-- Premium Access Modal - IMPROVED DESIGN -->
+  <div class="premium-modal" id="premiumModal">
+    <div class="premium-content">
+      <div class="premium-icon">👑</div>
+      <h2 class="premium-title">Premium Access Required</h2>
+      <p class="premium-description">
+        To download this book, you need premium access. Premium members can download up to 5 books per month.
+      </p>
+      
+      <div class="premium-features">
+        <h3>Premium Benefits:</h3>
+        <ul>
+          <li>Download up to 5 books per month</li>
+          <li>Access to exclusive content</li>
+          <li>Priority customer support</li>
+          <li>No ads experience</li>
+          <li>Early access to new releases</li>
+        </ul>
+      </div>
+      
+      <div class="premium-action-buttons">
+        <button class="premium-btn" onclick="redirectToPricing()">💰 Upgrade to Premium</button>
+        <button class="play-btn" onclick="redirectToPuzzleGame()">🎮 Play Puzzle to Download</button>
+      </div>
+      
+      <button class="close-btn" onclick="closePremiumModal()" style="margin-top: 20px; background: rgba(255,255,255,0.1); color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">Close</button>
+    </div>
+  </div>
+
+  <!-- Download Modal -->
+  <div class="download-modal" id="downloadModal">
+    <div class="download-content">
+      <div class="download-icon">📥</div>
+      <h2 class="download-title">Download Ready!</h2>
+      <p class="download-description">
+        Congratulations! You've successfully completed the puzzle. Your book is now ready for download.
+      </p>
+      
+      <div class="book-info" style="text-align: left; margin: 20px 0; padding: 15px; background: rgba(42, 42, 74, 0.7); border-radius: 8px;">
+        <h3 id="downloadBookTitle">Book Title</h3>
+        <p id="downloadBookAuthor">Author Name</p>
+        <p>Format: PDF</p>
+        <p>File Size: 2.4 MB</p>
+      </div>
+      
+      <button class="download-btn" onclick="downloadBook()">📥 Download Book</button>
+      <button class="close-btn" onclick="closeDownloadModal()" style="margin-top: 15px; background: rgba(255,255,255,0.1); color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">Close</button>
+    </div>
+  </div>  
+
+  <script>
+  // Get books from localStorage and combine with hardcoded books - FIXED VERSION
+  function getBooks() {
+    const storedBooks = JSON.parse(localStorage.getItem('libraryBooks') || '[]');
+    
+    // Hardcoded default books (24 books)
+    const hardcodedBooks = [
+      {
+        id: 1,
+        title: "The Great Gatsby",
+        author: "F. Scott Fitzgerald",
+        genre: "Fiction",
+        year: 1925,
+        isbn: "978-0-7432-7356-5",
+        pages: 180,
+        price: 12.99,
+        description: "A timeless classic set in the Jazz Age, this novel explores themes of idealism, resistance to change, social upheaval, and excess. Through the eyes of narrator Nick Carraway, we witness the mysterious millionaire Jay Gatsby's obsessive pursuit of his lost love, Daisy Buchanan, against the backdrop of lavish Long Island parties.",
+        image: "https://images.unsplash.com/photo-1629992101753-56d196c8aabb?w=400",
+        available: true
+      },
+      {
+        id: 2,
+        title: "Sapiens: A Brief History of Humankind",
+        author: "Yuval Noah Harari",
+        genre: "History",
+        year: 2014,
+        isbn: "978-0-06-231609-7",
+        pages: 443,
+        price: 18.50,
+        description: "This groundbreaking work explores how Homo sapiens came to be the dominant species on Earth. Harari examines the Cognitive, Agricultural, and Scientific Revolutions that shaped human societies, challenging readers to reconsider the narratives of human history and our future trajectory.",
+        image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400",
+        available: true
+      },
+      {
+        id: 3,
+        title: "1984",
+        author: "George Orwell",
+        genre: "Fiction",
+        year: 1949,
+        isbn: "978-0-452-28423-4",
+        pages: 328,
+        price: 10.99,
+        description: "A chilling dystopian novel that introduced concepts like Big Brother, thought police, and Newspeak. Winston Smith's rebellion against the totalitarian Party explores themes of surveillance, truth, and individual freedom in a society where even thoughts can be crimes.",
+        image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=400",
+        available: false
+      },
+      {
+        id: 4,
+        title: "The Selfish Gene",
+        author: "Richard Dawkins",
+        genre: "Science",
+        year: 1976,
+        isbn: "978-0-19-286092-7",
+        pages: 224,
+        price: 15.75,
+        description: "Revolutionizing our understanding of evolution, this book presents the gene-centered view of natural selection. Dawkins introduces the concept of the 'meme' as a cultural replicator and explains complex biological concepts with remarkable clarity and wit.",
+        image: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=400",
+        available: true
+      },
+      {
+        id: 5,
+        title: "Harry Potter and the Philosopher's Stone",
+        author: "J.K. Rowling",
+        genre: "Fantasy",
+        year: 1997,
+        isbn: "978-0-7475-3269-9",
+        pages: 223,
+        price: 22.00,
+        description: "The magical beginning of Harry Potter's journey at Hogwarts School of Witchcraft and Wizardry. Discover hidden magical abilities, make lifelong friends, and confront the dark wizard who killed his parents in this enchanting tale of courage and friendship.",
+        image: "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400",
+        available: true
+      },
+      {
+        id: 6,
+        title: "Clean Code",
+        author: "Robert C. Martin",
+        genre: "Technology",
+        year: 2008,
+        isbn: "978-0-13-235088-4",
+        pages: 464,
+        price: 35.99,
+        description: "Essential reading for software developers, this book presents principles, patterns, and practices for writing clean, maintainable code. Learn how to transform bad code into good code and develop the discipline of craftsmanship in software development.",
+        image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400",
+        available: true
+      },
+      {
+        id: 7,
+        title: "Pride and Prejudice",
+        author: "Jane Austen",
+        genre: "Romance",
+        year: 1813,
+        isbn: "978-0-14-143951-8",
+        pages: 432,
+        price: 8.99,
+        description: "A masterpiece of romantic literature following the spirited Elizabeth Bennet as she navigates society, family expectations, and her complicated relationship with the proud Mr. Darcy. This novel brilliantly explores themes of love, reputation, and class in Regency England.",
+        image: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400",
+        available: true
+      },
+      {
+        id: 8,
+        title: "Murder on the Orient Express",
+        author: "Agatha Christie",
+        genre: "Mystery",
+        year: 1934,
+        isbn: "978-0-06-269366-2",
+        pages: 256,
+        price: 11.25,
+        description: "Hercule Poirot's most famous case finds him aboard the luxurious Orient Express when a passenger is murdered. With the train stranded by snow and everyone a suspect, Poirot must unravel a complex web of clues in this classic whodunit.",
+        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+        available: false
+      },
+      {
+        id: 9,
+        title: "The Hobbit",
+        author: "J.R.R. Tolkien",
+        genre: "Fantasy",
+        year: 1937,
+        isbn: "978-0-547-92822-7",
+        pages: 310,
+        price: 19.99,
+        description: "Bilbo Baggins, a comfort-loving hobbit, embarks on an unexpected adventure with a company of dwarves to reclaim their mountain home from the dragon Smaug. This prelude to The Lord of the Rings introduces readers to Middle-earth's rich mythology.",
+        image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400",
+        available: true
+      },
+      {
+        id: 10,
+        title: "To Kill a Mockingbird",
+        author: "Harper Lee",
+        genre: "Fiction",
+        year: 1960,
+        isbn: "978-0-06-112008-4",
+        pages: 324,
+        price: 14.50,
+        description: "Through the eyes of young Scout Finch, we witness her father Atticus's courageous defense of a black man wrongly accused of rape in the Depression-era South. This Pulitzer Prize-winning novel explores racial injustice and moral growth with profound compassion.",
+        image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400",
+        available: true
+      },
+      {
+        id: 11,
+        title: "The Da Vinci Code",
+        author: "Dan Brown",
+        genre: "Mystery",
+        year: 2003,
+        isbn: "978-0-307-27767-8",
+        pages: 454,
+        price: 13.99,
+        description: "Harvard symbologist Robert Langdon is thrust into a deadly mystery when the curator of the Louvre is murdered. Following clues in Leonardo da Vinci's works, Langdon races through Paris and London to solve a puzzle that could shake the foundations of Christianity.",
+        image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400",
+        available: false
+      },
+      {
+        id: 12,
+        title: "Dune",
+        author: "Frank Herbert",
+        genre: "Science Fiction",
+        year: 1965,
+        isbn: "978-0-441-17271-9",
+        pages: 412,
+        price: 16.75,
+        description: "Set in the distant future amidst a feudal interstellar society, this epic follows young Paul Atreides as his family assumes control of the desert planet Arrakis. The only source of the universe's most valuable substance, the spice melange, becomes the center of political intrigue and revolution.",
+        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+        available: true
+      },
+      {
+        id: 13,
+        title: "The Catcher in the Rye",
+        author: "J.D. Salinger",
+        genre: "Fiction",
+        year: 1951,
+        isbn: "978-0-316-76948-0",
+        pages: 234,
+        price: 9.99,
+        description: "Holden Caulfield's first-person narrative of his experiences in New York City after being expelled from prep school. This controversial coming-of-age story captures teenage alienation and rebellion with raw authenticity and has become a defining work of American literature.",
+        image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400",
+        available: true
+      },
+      {
+        id: 14,
+        title: "Brave New World",
+        author: "Aldous Huxley",
+        genre: "Science Fiction",
+        year: 1932,
+        isbn: "978-0-06-085052-4",
+        pages: 288,
+        price: 12.25,
+        description: "In a futuristic World State where human beings are genetically engineered and psychologically conditioned, this dystopian vision explores the dark side of technological progress, consumerism, and the sacrifice of individuality for stability and happiness.",
+        image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400",
+        available: true
+      },
+      {
+        id: 15,
+        title: "The Alchemist",
+        author: "Paulo Coelho",
+        genre: "Fiction",
+        year: 1988,
+        isbn: "978-0-06-112241-5",
+        pages: 208,
+        price: 11.99,
+        description: "A shepherd boy's journey from Spain to the Egyptian pyramids in search of treasure becomes a spiritual quest. This allegorical novel explores themes of destiny, personal legend, and listening to one's heart in pursuit of dreams.",
+        image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400",
+        available: false
+      },
+      {
+        id: 16,
+        title: "The Lord of the Rings",
+        author: "J.R.R. Tolkien",
+        genre: "Fantasy",
+        year: 1954,
+        isbn: "978-0-618-64015-7",
+        pages: 1178,
+        price: 29.99,
+        description: "The epic trilogy follows Frodo Baggins and the Fellowship's quest to destroy the One Ring and defeat the Dark Lord Sauron. This masterpiece of high fantasy created an entire mythology and remains one of the most influential works of the 20th century.",
+        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+        available: true
+      },
+      {
+        id: 17,
+        title: "The Shining",
+        author: "Stephen King",
+        genre: "Horror",
+        year: 1977,
+        isbn: "978-0-385-12167-5",
+        pages: 447,
+        price: 15.99,
+        description: "The Torrance family's winter as caretakers of the isolated Overlook Hotel descends into supernatural terror. Jack Torrance's struggle with alcoholism and writer's block combines with his son Danny's psychic abilities to create a masterpiece of psychological horror.",
+        image: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=400",
+        available: true
+      },
+      {
+        id: 18,
+        title: "Gone Girl",
+        author: "Gillian Flynn",
+        genre: "Mystery",
+        year: 2012,
+        isbn: "978-0-307-58836-4",
+        pages: 432,
+        price: 14.75,
+        description: "On their fifth wedding anniversary, Nick Dunne's wife Amy disappears under suspicious circumstances. This psychological thriller alternates between Nick's present-day narrative and Amy's diary entries, creating a twisted tale of marriage, media, and manipulation.",
+        image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400",
+        available: false
+      },
+      {
+        id: 19,
+        title: "The Hunger Games",
+        author: "Suzanne Collins",
+        genre: "Science Fiction",
+        year: 2008,
+        isbn: "978-0-439-02352-8",
+        pages: 374,
+        price: 13.50,
+        description: "In a post-apocalyptic nation, teenager Katniss Everdeen volunteers for the Hunger Games to save her sister. This brutal televised competition where teenagers fight to the death becomes a catalyst for revolution in this gripping dystopian series.",
+        image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400",
+        available: true
+      },
+      {
+        id: 20,
+        title: "The Girl with the Dragon Tattoo",
+        author: "Stieg Larsson",
+        genre: "Mystery",
+        year: 2005,
+        isbn: "978-0-307-26975-1",
+        pages: 465,
+        price: 16.99,
+        description: "Disgraced journalist Mikael Blomkvist and hacker Lisbeth Salander investigate the 40-year-old disappearance of a wealthy industrialist's niece. This complex thriller exposes family secrets, corporate corruption, and violence against women in Swedish society.",
+        image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400",
+        available: true
+      },
+      {
+        id: 21,
+        title: "The Kite Runner",
+        author: "Khaled Hosseini",
+        genre: "Fiction",
+        year: 2003,
+        isbn: "978-1-59448-000-3",
+        pages: 371,
+        price: 12.75,
+        description: "Amir's journey from his childhood in Afghanistan to adulthood in America is haunted by his betrayal of his best friend Hassan. This powerful story explores friendship, guilt, redemption, and the complex relationship between fathers and sons against Afghanistan's turbulent history.",
+        image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400",
+        available: true
+      },
+      {
+        id: 22,
+        title: "The Book Thief",
+        author: "Markus Zusak",
+        genre: "Historical Fiction",
+        year: 2005,
+        isbn: "978-0-375-83100-3",
+        pages: 552,
+        price: 15.25,
+        description: "Narrated by Death, this novel follows young Liesel Meminger in Nazi Germany as she discovers the power of words through stolen books. Her story of survival, friendship with a Jewish refugee, and the resilience of the human spirit is both heartbreaking and uplifting.",
+        image: "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400",
+        available: false
+      },
+      {
+        id: 23,
+        title: "Thinking, Fast and Slow",
+        author: "Daniel Kahneman",
+        genre: "Psychology",
+        year: 2011,
+        isbn: "978-0-374-27563-1",
+        pages: 499,
+        price: 21.99,
+        description: "Nobel Prize-winning psychologist Daniel Kahneman reveals the two systems that drive our thinking: the fast, intuitive System 1 and the slow, deliberate System 2. This groundbreaking work exposes the cognitive biases that affect our decisions in surprising ways.",
+        image: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=400",
+        available: true
+      },
+      {
+        id: 24,
+        title: "Educated",
+        author: "Tara Westover",
+        genre: "Biography",
+        year: 2018,
+        isbn: "978-0-399-59050-4",
+        pages: 334,
+        price: 17.50,
+        description: "Born to survivalist parents in the mountains of Idaho, Tara Westover never attended school until she entered college at seventeen. Her remarkable journey from isolation to earning a PhD from Cambridge University explores the meaning of education and the price of self-invention.",
+        image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400",
+        available: true
+      }
+    ];
+
+    // Combine hardcoded books with stored books
+    const allBooks = [...hardcodedBooks];
+    
+    storedBooks.forEach(storedBook => {
+      // Enhanced duplicate check - handle both string and number IDs
+      const exists = hardcodedBooks.some(hardcodedBook => 
+        hardcodedBook.id == storedBook.id || 
+        hardcodedBook.title.toLowerCase() === storedBook.title.toLowerCase() ||
+        hardcodedBook.isbn === storedBook.isbn
+      );
+      
+      if (!exists) {
+        // Ensure the stored book has proper ID handling
+        const enhancedBook = {
+          ...storedBook,
+          id: storedBook.id || Date.now() + Math.random(), // Ensure ID exists
+          price: storedBook.price || 0.00,
+          pages: storedBook.pages || 0,
+          year: storedBook.year || new Date().getFullYear(),
+          description: storedBook.description || "No description available.",
+          available: storedBook.available !== undefined ? storedBook.available : true
+        };
+        allBooks.push(enhancedBook);
+      }
+    });
+    
+    return allBooks;
+  }
+
+  // Variables for functionality
+  let currentBookForBorrow = null;
+  let currentBookForRequest = null;
+  let currentBookForDownload = null;
+  let selectedPaymentMethod = null;
+
+  // Load user data
+  const user = JSON.parse(localStorage.getItem('ol_user') || 'null');
+  const nameEl = document.getElementById('userName');
+  const emailEl = document.getElementById('userEmail');
+  const phoneEl = document.getElementById('userPhone');
+  const avatarEl = document.getElementById('avatar');
+  const settingsBox = document.getElementById('settings');
+  const editName = document.getElementById('editName');
+  const editEmail = document.getElementById('editEmail');
+  const editPhone = document.getElementById('editPhone');
+  const memberSinceEl = document.getElementById('memberSince');
+
+  if (!user) {
+    alert("Please sign up or login first!");
+    window.location.href = "index.html";
+  } else {
+    nameEl.textContent = user.name || "Reader";
+    emailEl.textContent = user.email || "user@example.com";
+    phoneEl.textContent = user.phone || "+1234567890";
+    avatarEl.src = user.avatar || "https://api.dicebear.com/6.x/adventurer/svg?seed=warrior";
+    editName.value = user.name || "";
+    editEmail.value = user.email || "";
+    editPhone.value = user.phone || "";
+    memberSinceEl.textContent = user.joinDate || "2023";
+  }
+
+  // Initialize books display
+  document.addEventListener('DOMContentLoaded', function() {
+    const books = getBooks();
+    displayBooks(books);
+    updateBooksCounter();
+    updateFilterOptions();
+    
+    // Set minimum dates for borrow and return
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('borrowDate').min = today;
+    document.getElementById('returnDate').min = today;
+  });
+
+  // Display books in grid - COMPLETELY FIXED VERSION
+  function displayBooks(booksToDisplay) {
+    const booksGrid = document.getElementById('booksGrid');
+    booksGrid.innerHTML = '';
+    
+    booksToDisplay.forEach((book, index) => {
+      const bookCard = document.createElement('div');
+      bookCard.className = 'book-card';
+      bookCard.style.animationDelay = `${(index % 10) * 0.1}s`;
+      
+      // Ensure book has all required properties with fallbacks
+      const safeBook = {
+        id: book.id || index + 1000,
+        title: book.title || "Untitled",
+        author: book.author || "Unknown Author",
+        genre: book.genre || "Unknown Genre",
+        price: book.price || 0.00,
+        image: book.image || "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400",
+        available: book.available !== undefined ? book.available : true
+      };
+      
+      bookCard.innerHTML = `
+        <img src="${safeBook.image}" alt="${safeBook.title}" class="book-image">
+        <div class="book-info">
+          <h3 class="book-title">${safeBook.title}</h3>
+          <p class="book-author">by ${safeBook.author}</p>
+          <span class="book-genre">${safeBook.genre}</span>
+          <div class="book-price">$${safeBook.price.toFixed(2)}</div>
+          <div class="book-availability">
+            <span class="availability-status ${safeBook.available ? 'available' : 'unavailable'}">
+              ${safeBook.available ? 'Available' : 'Borrowed'}
+            </span>
+            <button class="view-btn" data-book-id="${safeBook.id}">View Details</button>
+          </div>
+        </div>
+      `;
+      booksGrid.appendChild(bookCard);
+    });
+    
+    // Add event listeners to all view buttons
+    document.querySelectorAll('.view-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        const bookId = this.getAttribute('data-book-id');
+        openBookDetails(bookId);
+      });
+    });
+  }
+
+  // Update books counter
+  function updateBooksCounter() {
+    const books = getBooks();
+    const totalBooks = books.length;
+    const availableBooks = books.filter(book => book.available).length;
+    const borrowedBooks = totalBooks - availableBooks;
+    
+    document.getElementById('totalBooks').textContent = totalBooks;
+    document.getElementById('availableBooks').textContent = availableBooks;
+    document.getElementById('borrowedBooks').textContent = borrowedBooks;
+  }
+
+  // Update filter options dynamically
+  function updateFilterOptions() {
+    const books = getBooks();
+    const authorFilter = document.getElementById('authorFilter');
+    const yearFilter = document.getElementById('yearFilter');
+    
+    // Get unique authors and years from ALL books
+    const authors = [...new Set(books.map(book => book.author))].sort();
+    const years = [...new Set(books.map(book => book.year))].sort((a, b) => b - a);
+    
+    // Update author filter
+    authorFilter.innerHTML = '<option value="">All Authors</option>';
+    authors.forEach(author => {
+      authorFilter.innerHTML += `<option value="${author}">${author}</option>`;
+    });
+    
+    // Update year filter
+    yearFilter.innerHTML = '<option value="">All Years</option>';
+    years.forEach(year => {
+      yearFilter.innerHTML += `<option value="${year}">${year}</option>`;
+    });
+  }
+
+  // Search books
+  function searchBooks() {
+    const books = getBooks();
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const filteredBooks = books.filter(book => 
+      book.title.toLowerCase().includes(searchTerm) ||
+      book.author.toLowerCase().includes(searchTerm) ||
+      book.genre.toLowerCase().includes(searchTerm)
+    );
+    displayBooks(filteredBooks);
+  }
+
+  // Filter books
+  function filterBooks() {
+    const books = getBooks();
+    const genre = document.getElementById('genreFilter').value;
+    const author = document.getElementById('authorFilter').value;
+    const year = document.getElementById('yearFilter').value;
+    
+    let filteredBooks = books;
+    
+    if (genre) {
+      filteredBooks = filteredBooks.filter(book => book.genre === genre);
+    }
+    
+    if (author) {
+      filteredBooks = filteredBooks.filter(book => book.author === author);
+    }
+    
+    if (year) {
+      filteredBooks = filteredBooks.filter(book => book.year == year);
+    }
+    
+    displayBooks(filteredBooks);
+  }
+
+  // Open book details modal - FIXED VERSION
+  function openBookDetails(bookId) {
+    console.log("Opening book details for ID:", bookId);
+    
+    const books = getBooks();
+    
+    // Use == for comparison to handle string vs number IDs
+    const book = books.find(b => b.id == bookId);
+    
+    if (!book) {
+      console.error("Book not found with ID:", bookId);
+      alert("Book details not found. Please try refreshing the page.");
+      return;
+    }
+    
+    console.log("Found book:", book);
+    
+    // Update modal content with fallbacks for missing properties
+    document.getElementById('modalBookImage').src = book.image || "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400";
+    document.getElementById('modalBookTitle').textContent = book.title || "Untitled";
+    document.getElementById('modalBookAuthor').textContent = `by ${book.author || "Unknown Author"}`;
+    document.getElementById('modalBookISBN').textContent = book.isbn || "Not specified";
+    document.getElementById('modalBookGenre').textContent = book.genre || "Not specified";
+    document.getElementById('modalBookYear').textContent = book.year || "Not specified";
+    document.getElementById('modalBookPages').textContent = book.pages || "Not specified";
+    document.getElementById('modalBookDescription').textContent = book.description || "No description available.";
+    
+    const statusElement = document.getElementById('modalBookStatus');
+    const isAvailable = book.available !== undefined ? book.available : true;
+    statusElement.textContent = isAvailable ? 'Available' : 'Currently Borrowed';
+    statusElement.className = `availability-status ${isAvailable ? 'available' : 'unavailable'}`;
+    
+    const actionButtons = document.getElementById('actionButtons');
+    
+    if (isAvailable) {
+      actionButtons.innerHTML = `
+        <button class="borrow-btn" data-book-id="${book.id}">📚 Borrow Book</button>
+        <button class="request-btn" data-book-id="${book.id}">📋 Request Book</button>
+        <button class="reserve-btn" data-book-id="${book.id}">📥 Download Book</button>
+      `;
+    } else {
+      actionButtons.innerHTML = `
+        <button class="request-btn" data-book-id="${book.id}">📋 Request Book</button>
+        <button class="reserve-btn">⏰ Reserve Book</button>
+      `;
+    }
+    
+    // Add event listeners to action buttons
+    document.querySelectorAll('#actionButtons .borrow-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        openBorrowForm(this.getAttribute('data-book-id'));
+      });
+    });
+    
+    document.querySelectorAll('#actionButtons .request-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        openRequestForm(this.getAttribute('data-book-id'));
+      });
+    });
+    
+    document.querySelectorAll('#actionButtons .reserve-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        openPremiumModal(this.getAttribute('data-book-id'));
+      });
+    });
+    
+    document.getElementById('bookModal').style.display = 'flex';
+  }
+
+  // Open borrow form - FIXED VERSION
+  function openBorrowForm(bookId) {
+    const books = getBooks();
+    const book = books.find(b => b.id == bookId);
+    if (!book) {
+      alert("Book not found. Please try again.");
+      return;
+    }
+    
+    currentBookForBorrow = book;
+    
+    // Pre-fill form data
+    document.getElementById('borrowUsername').value = user.name || '';
+    document.getElementById('borrowBookTopic').value = book.title;
+    document.getElementById('borrowAuthor').value = book.author;
+    document.getElementById('borrowPhone').value = user.phone || '';
+    
+    // Set default dates
+    const today = new Date();
+    const returnDate = new Date();
+    returnDate.setDate(today.getDate() + 14); // Default 2 weeks
+    
+    document.getElementById('borrowDate').value = today.toISOString().split('T')[0];
+    document.getElementById('returnDate').value = returnDate.toISOString().split('T')[0];
+    
+    closeModal();
+    document.getElementById('borrowFormModal').style.display = 'flex';
+  }
+
+  // Close borrow form
+  function closeBorrowForm() {
+    document.getElementById('borrowFormModal').style.display = 'none';
+  }
+
+  // Submit borrow form
+  document.getElementById('borrowForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    if (!currentBookForBorrow) {
+      alert("No book selected for borrowing.");
+      return;
+    }
+    
+    const borrowData = {
+      id: generateBorrowId(),
+      username: document.getElementById('borrowUsername').value,
+      bookTitle: document.getElementById('borrowBookTopic').value,
+      author: document.getElementById('borrowAuthor').value,
+      borrowDate: document.getElementById('borrowDate').value,
+      returnDate: document.getElementById('returnDate').value,
+      phone: document.getElementById('borrowPhone').value,
+      bookId: currentBookForBorrow.id,
+      timestamp: new Date().toISOString(),
+      returned: false,
+      type: 'borrowing'
+    };
+    
+    // Save to localStorage for admin page
+    saveBorrowRequest(borrowData);
+    
+    // Mark book as unavailable in localStorage (for admin-added books)
+    let storedBooks = JSON.parse(localStorage.getItem('libraryBooks') || '[]');
+    const storedBookIndex = storedBooks.findIndex(b => b.id == currentBookForBorrow.id);
+    if (storedBookIndex !== -1) {
+      storedBooks[storedBookIndex].available = false;
+      localStorage.setItem('libraryBooks', JSON.stringify(storedBooks));
+    }
+    
+    // Update the counter
+    updateBooksCounter();
+    
+    // Close borrow form and open payment modal
+    closeBorrowForm();
+    openPaymentModal();
+  });
+
+  // Generate unique borrow ID
+  function generateBorrowId() {
+    return 'BOR_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  }
+
+  // Save borrow request to localStorage
+  function saveBorrowRequest(borrowData) {
+    let borrowRequests = JSON.parse(localStorage.getItem('borrowRequests') || '[]');
+    borrowRequests.push(borrowData);
+    localStorage.setItem('borrowRequests', JSON.stringify(borrowRequests));
+  }
+
+  // Open request form - FIXED VERSION
+  function openRequestForm(bookId) {
+    const books = getBooks();
+    const book = books.find(b => b.id == bookId);
+    if (!book) {
+      alert("Book not found. Please try again.");
+      return;
+    }
+    
+    currentBookForRequest = book;
+    
+    // Pre-fill form data
+    document.getElementById('requestUsername').value = user.name || '';
+    document.getElementById('requestBookTitle').value = book.title;
+    document.getElementById('requestAuthor').value = book.author;
+    document.getElementById('requestGenre').value = book.genre || "Not specified";
+    document.getElementById('requestPhone').value = user.phone || '';
+    document.getElementById('requestReason').value = '';
+    
+    closeModal();
+    document.getElementById('requestModal').style.display = 'flex';
+  }
+
+  // Close request form
+  function closeRequestForm() {
+    document.getElementById('requestModal').style.display = 'none';
+  }
+
+  // Submit request form
+  document.getElementById('requestForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    if (!currentBookForRequest) {
+      alert("No book selected for request.");
+      return;
+    }
+    
+    const requestData = {
+      id: generateRequestId(),
+      username: document.getElementById('requestUsername').value,
+      bookTitle: document.getElementById('requestBookTitle').value,
+      author: document.getElementById('requestAuthor').value,
+      genre: document.getElementById('requestGenre').value,
+      reason: document.getElementById('requestReason').value,
+      phone: document.getElementById('requestPhone').value,
+      bookId: currentBookForRequest.id,
+      status: 'pending',
+      timestamp: new Date().toISOString(),
+      type: 'book_request'
+    };
+    
+    // Save to localStorage
+    saveBookRequest(requestData);
+    
+    // Show success message
+    alert('📚 Book request submitted successfully! Admin will review your request.');
+    closeRequestForm();
+  });
+
+  // Generate unique request ID
+  function generateRequestId() {
+    return 'REQ_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  }
+
+  // Save book request to localStorage
+  function saveBookRequest(requestData) {
+    let bookRequests = JSON.parse(localStorage.getItem('bookRequests') || '[]');
+    bookRequests.push(requestData);
+    localStorage.setItem('bookRequests', JSON.stringify(bookRequests));
+  }
+
+  // Open payment modal
+  function openPaymentModal() {
+    document.getElementById('paymentModal').style.display = 'flex';
+    selectedPaymentMethod = null;
+    updatePaymentOptions();
+  }
+
+  // Close payment modal
+  function closePaymentModal() {
+    document.getElementById('paymentModal').style.display = 'none';
+  }
+
+  // Select payment method
+  function selectPayment(method) {
+    selectedPaymentMethod = method;
+    updatePaymentOptions();
+  }
+
+  // Update payment options UI
+  function updatePaymentOptions() {
+    const options = document.querySelectorAll('.payment-option');
+    options.forEach(option => {
+      option.classList.remove('selected');
+    });
+    
+    if (selectedPaymentMethod) {
+      const selectedOption = document.querySelector(`.payment-option[onclick="selectPayment('${selectedPaymentMethod}')"]`);
+      if (selectedOption) {
+        selectedOption.classList.add('selected');
+      }
+    }
+  }
+
+  // Process payment
+  // Updated processPayment function - SAVE TO paymentHistory
+function processPayment() {
+    if (!selectedPaymentMethod) {
+        alert('Please select a payment method');
+        return;
+    }
+    
+    if (!currentBookForBorrow) {
+        alert("Payment processing error. Please try again.");
+        return;
+    }
+    
+    // Simulate payment processing
+    document.getElementById('payNowBtn').textContent = 'Processing...';
+    document.getElementById('payNowBtn').disabled = true;
+    
+    setTimeout(() => {
+        // Save payment to history
+        savePaymentHistory();
+        
+        // Show success message
+        closePaymentModal();
+        showSuccessModal();
+    }, 2000);
+}
+
+// New function to save payment history
+function savePaymentHistory() {
+    const paymentData = {
+        id: 'PAY_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        type: 'book_purchase',
+        bookId: currentBookForBorrow.id,
+        bookTitle: currentBookForBorrow.title,
+        author: currentBookForBorrow.author,
+        price: currentBookForBorrow.price || 0.00,
+        amount: currentBookForBorrow.price || 0.00,
+        user: user.name,
+        userEmail: user.email,
+        userPhone: user.phone,
+        paymentMethod: selectedPaymentMethod,
+        paymentMethodName: getPaymentMethodName(selectedPaymentMethod),
+        transactionDate: new Date().toISOString(),
+        status: 'completed'
+    };
+    
+    // Get existing payments
+    let payments = JSON.parse(localStorage.getItem('paymentHistory') || '[]');
+    payments.push(paymentData);
+    localStorage.setItem('paymentHistory', JSON.stringify(payments));
+    
+    // Also save to purchases for admin page compatibility
+    let purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
+    purchases.push({
+        id: paymentData.id,
+        type: 'book',
+        item: {
+            title: paymentData.bookTitle,
+            author: paymentData.author
+        },
+        amount: paymentData.amount,
+        paymentMethod: paymentData.paymentMethod,
+        user: paymentData.user,
+        timestamp: paymentData.transactionDate,
+        status: 'completed'
+    });
+    localStorage.setItem('purchases', JSON.stringify(purchases));
+    
+    console.log('Payment saved:', paymentData);
+}
+
+  // Show success modal
+  function showSuccessModal() {
+    if (!currentBookForBorrow) {
+      alert("Payment processing error. Please try again.");
+      return;
+    }
+    
+    const successMessage = `Your book "${currentBookForBorrow.title}" has been successfully borrowed! Payment method: ${getPaymentMethodName(selectedPaymentMethod)}`;
+    document.getElementById('successMessage').textContent = successMessage;
+    document.getElementById('successModal').style.display = 'flex';
+  }
+
+  // Get payment method name
+  function getPaymentMethodName(method) {
+    const methods = {
+      'netbanking': 'Net Banking',
+      'upi': 'UPI Payment',
+      'credit': 'Credit Card',
+      'cash': 'Cash on Delivery'
+    };
+    return methods[method] || method;
+  }
+
+  // Close success modal
+  function closeSuccessModal() {
+    document.getElementById('successModal').style.display = 'none';
+    // Refresh the page to update book availability
+    location.reload();
+  }
+
+  // Close modal
+  function closeModal() {
+    document.getElementById('bookModal').style.display = 'none';
+  }
+
+  // Open premium modal - FIXED VERSION
+  function openPremiumModal(bookId) {
+    const books = getBooks();
+    const book = books.find(b => b.id == bookId);
+    if (book) {
+      currentBookForDownload = book;
+    } else {
+      alert("Book not found for download.");
+      return;
+    }
+    document.getElementById('premiumModal').style.display = 'flex';
+    closeModal();
+  }
+
+  // Close premium modal
+  function closePremiumModal() {
+    document.getElementById('premiumModal').style.display = 'none';
+  }
+
+  // Open download modal
+  function openDownloadModal() {
+    if (currentBookForDownload) {
+      document.getElementById('downloadBookTitle').textContent = currentBookForDownload.title;
+      document.getElementById('downloadBookAuthor').textContent = `by ${currentBookForDownload.author}`;
+      document.getElementById('downloadModal').style.display = 'flex';
+    }
+  }
+
+  // Close download modal
+  function closeDownloadModal() {
+    document.getElementById('downloadModal').style.display = 'none';
+  }
+
+  // Redirect to pricing page
+  function redirectToPricing() {
+    window.location.href = "./pricing.html";
+  }
+
+  // Redirect to puzzle game - FIXED VERSION
+  function redirectToPuzzleGame() {
+    if (currentBookForDownload) {
+      localStorage.setItem('current_book_id', currentBookForDownload.id);
+      localStorage.setItem('current_book_image', currentBookForDownload.image);
+      localStorage.setItem('current_book_title', currentBookForDownload.title);
+      window.location.href = "./puzzle-game.html";
+    } else {
+      alert("No book selected for download.");
+    }
+  }
+
+  // Download book function
+  function downloadBook() {
+    if (currentBookForDownload) {
+      alert(`Downloading "${currentBookForDownload.title}" by ${currentBookForDownload.author}...`);
+      
+      // Track download in user data
+      if (user) {
+        if (!user.downloads) user.downloads = [];
+        user.downloads.push({
+          id: currentBookForDownload.id,
+          title: currentBookForDownload.title,
+          date: new Date().toISOString()
+        });
+        localStorage.setItem('ol_user', JSON.stringify(user));
+      }
+      
+      closeDownloadModal();
+    }
+  }
+
+  // Check if user is returning from puzzle game with success
+  window.addEventListener('load', function() {
+    const puzzleSuccess = localStorage.getItem('puzzleSuccess');
+    if (puzzleSuccess === 'true') {
+      const bookId = localStorage.getItem('current_book_id');
+      if (bookId) {
+        const books = getBooks();
+        currentBookForDownload = books.find(b => b.id == bookId);
+        if (currentBookForDownload) {
+          openDownloadModal();
+        }
+      }
+      localStorage.removeItem('puzzleSuccess');
+    }
+  });
+
+  // Refresh books display when returning to page
+  function refreshBooksDisplay() {
+    const books = getBooks();
+    displayBooks(books);
+    updateBooksCounter();
+    updateFilterOptions();
+  }
+
+  // Auto-refresh when page becomes visible
+  document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+      refreshBooksDisplay();
+    }
+  });
+
+  // Also refresh when page gains focus
+  window.addEventListener('focus', refreshBooksDisplay);
+
+  // Profile functions
+  function toggleSettings() {
+    settingsBox.style.display = (settingsBox.style.display === "none" || settingsBox.style.display === "") ? "block" : "none";
+  }
+
+  function saveProfile() {
+    user.name = editName.value.trim();
+    user.email = editEmail.value.trim();
+    user.phone = editPhone.value.trim();
+    localStorage.setItem("ol_user", JSON.stringify(user));
+    nameEl.textContent = user.name;
+    emailEl.textContent = user.email;
+    phoneEl.textContent = user.phone;
+    alert("✅ Profile updated successfully!");
+  }
+
+  function logout() {
+    localStorage.removeItem("ol_user");
+    window.location.href = "index.html";
+  }
+
+  // Close modal when clicking outside
+  window.onclick = function(event) {
+    const modal = document.getElementById('bookModal');
+    const premiumModal = document.getElementById('premiumModal');
+    const downloadModal = document.getElementById('downloadModal');
+    const borrowFormModal = document.getElementById('borrowFormModal');
+    const requestModal = document.getElementById('requestModal');
+    const paymentModal = document.getElementById('paymentModal');
+    const successModal = document.getElementById('successModal');
+    
+    if (event.target === modal) closeModal();
+    if (event.target === premiumModal) closePremiumModal();
+    if (event.target === downloadModal) closeDownloadModal();
+    if (event.target === borrowFormModal) closeBorrowForm();
+    if (event.target === requestModal) closeRequestForm();
+    if (event.target === paymentModal) closePaymentModal();
+    if (event.target === successModal) closeSuccessModal();
+  }
+
+  // Add search on Enter key
+  document.getElementById('searchInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      searchBooks();
+    }
+  });
+
+  // Debug function to check books data
+  function debugBooks() {
+    const books = getBooks();
+    console.log("All books:", books);
+    console.log("Stored books:", JSON.parse(localStorage.getItem('libraryBooks') || '[]'));
+  }
+</script>
+<!-- Include scripts -->
+<script src="./mobile-menu.js"></script>
+
+</body>
+</html>

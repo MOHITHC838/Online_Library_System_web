@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GameVerse Library — Pricing</title>
+<link rel="stylesheet" href="./responsive.css">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Rajdhani', 'Orbitron', sans-serif;
+    background: 
+      radial-gradient(circle at 20% 30%, #ff3366 0%, transparent 20%),
+      radial-gradient(circle at 80% 70%, #33ccff 0%, transparent 20%),
+      radial-gradient(circle at 40% 80%, #ffcc00 0%, transparent 20%),
+      linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+    color: #ffffff;
+    min-height: 100vh;
+    animation: backgroundPulse 15s ease-in-out infinite;
+  }
+
+  @keyframes backgroundPulse {
+    0%, 100% { 
+      background: 
+        radial-gradient(circle at 20% 30%, #ff3366 0%, transparent 20%),
+        radial-gradient(circle at 80% 70%, #33ccff 0%, transparent 20%),
+        radial-gradient(circle at 40% 80%, #ffcc00 0%, transparent 20%),
+        linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+    }
+    33% { 
+      background: 
+        radial-gradient(circle at 80% 30%, #33ccff 0%, transparent 20%),
+        radial-gradient(circle at 40% 70%, #ffcc00 0%, transparent 20%),
+        radial-gradient(circle at 20% 80%, #ff3366 0%, transparent 20%),
+        linear-gradient(225deg, #0f0f1a 0%, #1a1a2e 100%);
+    }
+    66% { 
+      background: 
+        radial-gradient(circle at 40% 30%, #ffcc00 0%, transparent 20%),
+        radial-gradient(circle at 20% 70%, #ff3366 0%, transparent 20%),
+        radial-gradient(circle at 80% 80%, #33ccff 0%, transparent 20%),
+        linear-gradient(315deg, #0f0f1a 0%, #1a1a2e 100%);
+    }
+  }
+
+  /* Header/Navbar - FIXED - GAMING THEME */
+  header {
+    width: 100%;
+    background: rgba(26, 26, 46, 0.9);
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #ffcc00, #ff3366);
+  -webkit-background-clip: text;
+  background-clip: text; /* ← ADD THIS LINE */
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+}
+
+  nav ul {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+  }
+
+  nav a {
+    color: #33ccff;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  nav a:hover {
+    background: rgba(51, 204, 255, 0.2);
+    transform: translateY(-2px);
+  }
+
+  nav a.active {
+    background: rgba(51, 204, 255, 0.2);
+  }
+
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #33ccff;
+    transition: all 0.3s ease;
+  }
+
+  nav a:hover::after {
+    width: 100%;
+    left: 0;
+  }
+
+  /* Main Content - Adjusted for fixed header */
+  .main-content {
+    padding: 100px 30px 30px 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-size: 2.2rem;
+    color: #ffcc00;
+    margin-bottom: 10px;
+    text-align: center;
+    animation: fadeIn 1s ease-out;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+    font-family: 'Orbitron', sans-serif;
+  }
+
+  .section-subtitle {
+    text-align: center;
+    color: #cccccc;
+    margin-bottom: 40px;
+    font-size: 1.1rem;
+  }
+
+  /* Pricing Cards - GAMING THEME */
+  .pricing-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 50px;
+  }
+
+  .pricing-card {
+    background: rgba(42, 42, 74, 0.8);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  .pricing-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(255, 51, 102, 0.3);
+  }
+
+  .pricing-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #ff3366, #33ccff, #ffcc00);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+
+  .pricing-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .pricing-card.popular {
+    border: 2px solid #ffcc00;
+    transform: scale(1.05);
+  }
+
+  .pricing-card.popular:hover {
+    transform: scale(1.05) translateY(-10px);
+    box-shadow: 0 25px 50px rgba(255, 204, 0, 0.4);
+  }
+
+  .popular-badge {
+    position: absolute;
+    top: 20px;
+    right: -30px;
+    background: linear-gradient(135deg, #ffcc00, #ff9900);
+    color: #1a1a2e;
+    padding: 8px 40px;
+    transform: rotate(45deg);
+    font-size: 0.8rem;
+    font-weight: 700;
+    box-shadow: 0 2px 10px rgba(255, 204, 0, 0.3);
+  }
+
+  .plan-name {
+    font-size: 1.5rem;
+    color: #ffcc00;
+    margin-bottom: 10px;
+    font-weight: 600;
+    text-shadow: 0 0 5px rgba(255, 204, 0, 0.3);
+  }
+
+  .plan-price {
+    font-size: 3rem;
+    color: #33ccff;
+    margin-bottom: 20px;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(51, 204, 255, 0.3);
+  }
+
+  .plan-price span {
+    font-size: 1rem;
+    color: #cccccc;
+  }
+
+  .plan-features {
+    list-style: none;
+    margin-bottom: 30px;
+  }
+
+  .plan-features li {
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+    color: #cccccc;
+    transition: transform 0.3s ease;
+  }
+
+  .plan-features li:hover {
+    transform: translateX(5px);
+    color: #ffffff;
+  }
+
+  .plan-features li::before {
+    content: "✓";
+    color: #4CAF50;
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: 1.1rem;
+  }
+
+  .purchase-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #ff3366, #cc1a4a);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .purchase-btn:hover {
+    background: linear-gradient(135deg, #ff1a53, #b3153a);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 51, 102, 0.4);
+  }
+
+  /* Books Pricing Section - GAMING THEME */
+  .books-pricing-section {
+    margin-top: 50px;
+  }
+
+  .books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+  }
+
+  .book-price-card {
+    background: rgba(42, 42, 74, 0.8);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    transition: all 0.4s ease;
+    animation: fadeInUp 0.6s ease-out;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  .book-price-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(255, 51, 102, 0.3);
+  }
+
+  .book-price-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #ff3366, #33ccff, #ffcc00);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+
+  .book-price-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .book-price-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+    transition: all 0.4s ease;
+  }
+
+  .book-price-card:hover .book-price-image {
+    transform: scale(1.1);
+  }
+
+  .book-price-info {
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .book-price-title {
+    font-size: 1.1rem;
+    color: #ffffff;
+    margin-bottom: 8px;
+    font-weight: 600;
+    line-height: 1.3;
+    transition: color 0.3s ease;
+  }
+
+  .book-price-card:hover .book-price-title {
+    color: #ffcc00;
+  }
+
+  .book-price-author {
+    color: #cccccc;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+  }
+
+  .book-price-genre {
+    display: inline-block;
+    background: rgba(255, 51, 102, 0.2);
+    color: #ffcc00;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    margin-bottom: 15px;
+    border: 1px solid rgba(255, 204, 0, 0.3);
+  }
+
+  .book-price-amount {
+    font-size: 1.5rem;
+    color: #33ccff;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-shadow: 0 0 5px rgba(51, 204, 255, 0.3);
+  }
+
+  .buy-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #00cc66, #00994d);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .buy-btn:hover {
+    background: linear-gradient(135deg, #00b359, #008040);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 204, 102, 0.4);
+  }
+
+  /* Payment Modal - GAMING THEME */
+  .payment-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .payment-content {
+    background: rgba(42, 42, 74, 0.95);
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 15px 40px rgba(255, 51, 102, 0.3);
+    animation: modalSlideIn 0.4s ease;
+    border: 2px solid #33ccff;
+    backdrop-filter: blur(10px);
+  }
+
+  .payment-header {
+    background: linear-gradient(90deg, #33ccff, #1a99cc);
+    color: white;
+    padding: 20px;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .close-btn:hover {
+    transform: rotate(90deg);
+  }
+
+  .payment-body {
+    padding: 30px;
+  }
+
+  .payment-book-info {
+    background: rgba(42, 42, 74, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    border: 1px solid rgba(51, 204, 255, 0.3);
+  }
+
+  .payment-book-title {
+    font-size: 1.3rem;
+    color: #ffcc00;
+    margin-bottom: 5px;
+    text-shadow: 0 0 5px rgba(255, 204, 0, 0.3);
+  }
+
+  .payment-book-author {
+    color: #cccccc;
+    margin-bottom: 10px;
+  }
+
+  .payment-book-price {
+    font-size: 1.5rem;
+    color: #33ccff;
+    font-weight: 700;
+    text-shadow: 0 0 5px rgba(51, 204, 255, 0.3);
+  }
+
+  .payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+  }
+
+  .payment-option {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid rgba(51, 204, 255, 0.3);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(30, 30, 50, 0.6);
+  }
+
+  .payment-option:hover {
+    border-color: #ffcc00;
+    background: rgba(42, 42, 74, 0.8);
+  }
+
+  .payment-option.selected {
+    border-color: #ffcc00;
+    background: rgba(42, 42, 74, 0.9);
+  }
+
+  .payment-icon {
+    font-size: 1.5rem;
+    margin-right: 15px;
+  }
+
+  .payment-details {
+    flex: 1;
+  }
+
+  .payment-title {
+    font-weight: 600;
+    color: #ffcc00;
+    margin-bottom: 5px;
+  }
+
+  .payment-description {
+    font-size: 0.9rem;
+    color: #cccccc;
+  }
+
+  .pay-now-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #ff3366, #cc1a4a);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+  }
+
+  .pay-now-btn:hover {
+    background: linear-gradient(135deg, #ff1a53, #b3153a);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4);
+  }
+
+  /* Success Modal - GAMING THEME */
+  .success-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 2001;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .success-content {
+    background: rgba(42, 42, 74, 0.95);
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    padding: 40px 30px;
+    box-shadow: 0 15px 40px rgba(0, 204, 102, 0.3);
+    animation: modalSlideIn 0.4s ease;
+    border: 2px solid #00cc66;
+    backdrop-filter: blur(10px);
+  }
+
+  .success-icon {
+    font-size: 4rem;
+    color: #00cc66;
+    margin-bottom: 20px;
+    animation: bounce 1s ease infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .success-title {
+    font-size: 1.8rem;
+    color: #ffcc00;
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+  }
+
+  .success-message {
+    color: #cccccc;
+    margin-bottom: 25px;
+    line-height: 1.6;
+  }
+
+  .success-btn {
+    padding: 12px 25px;
+    background: linear-gradient(135deg, #ff3366, #cc1a4a);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .success-btn:hover {
+    background: linear-gradient(135deg, #ff1a53, #b3153a);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4);
+  }
+
+  /* Footer - GAMING THEME */
+  footer {
+    background: rgba(26, 26, 46, 0.9);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 50px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes modalSlideIn {
+    from {
+      opacity: 0;
+      transform: scale(0.8) translateY(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .pricing-container {
+      grid-template-columns: 1fr;
+    }
+    
+    .pricing-card.popular {
+      transform: scale(1);
+    }
+    
+    .pricing-card.popular:hover {
+      transform: translateY(-10px);
+    }
+    
+    nav ul {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .books-grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    
+    .main-content {
+      padding: 120px 20px 20px 20px;
+    }
+    
+    header {
+      padding: 10px 20px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .main-content {
+      padding: 130px 15px 15px 15px;
+    }
+    
+    .section-title {
+      font-size: 1.8rem;
+    }
+    
+    .pricing-card {
+      padding: 20px;
+    }
+    
+    .plan-price {
+      font-size: 2.5rem;
+    }
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header/Navbar -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="homepage.html" class="nav-logo">🎮  GameVerse Library!</a>
+
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+           
+        <ul class="nav-menu">
+            <li><a href="homepage.html" class="nav-link">Home</a></li>      
+            <li><a href="book-catalog.html" class="nav-link">Book-Catlog</a></li>
+            <li><a href="admin.html" class="nav-link">Admin</a></li>
+            <li><a href="./about.html" class="nav-link">About</a></li>
+            <li><a href="./profile.html" class="nav-link">Your Profile</a></li>
+        </ul>
+    </div>
+</nav>
+
+
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1 class="section-title">Library Membership Plans</h1>
+    <p class="section-subtitle">Choose the perfect plan for your reading journey</p>
+    
+    <!-- Membership Pricing -->
+    <div class="pricing-container">
+      <div class="pricing-card">
+        <div class="plan-name">Basic Reader</div>
+        <div class="plan-price">$9.99<span>/month</span></div>
+        <ul class="plan-features">
+          <li>Access to 100+ books</li>
+          <li>Borrow 2 books at a time</li>
+          <li>Standard support</li>
+          <li>7-day borrowing period</li>
+          <li>Ad-supported experience</li>
+        </ul>
+        <button class="purchase-btn" onclick="purchasePlan('Basic Reader', 9.99)">Get Started</button>
+      </div>
+      
+      <div class="pricing-card popular">
+        <div class="popular-badge">POPULAR</div>
+        <div class="plan-name">Premium Reader</div>
+        <div class="plan-price">$19.99<span>/month</span></div>
+        <ul class="plan-features">
+          <li>Access to 1000+ books</li>
+          <li>Borrow 5 books at a time</li>
+          <li>Priority support</li>
+          <li>14-day borrowing period</li>
+          <li>Ad-free experience</li>
+          <li>Early access to new releases</li>
+          <li>Download up to 3 books/month</li>
+        </ul>
+        <button class="purchase-btn" onclick="purchasePlan('Premium Reader', 19.99)">Get Premium</button>
+      </div>
+      
+      <div class="pricing-card">
+        <div class="plan-name">Family Plan</div>
+        <div class="plan-price">$29.99<span>/month</span></div>
+        <ul class="plan-features">
+          <li>Access to 2000+ books</li>
+          <li>Up to 4 family members</li>
+          <li>Borrow 10 books total</li>
+          <li>24/7 premium support</li>
+          <li>30-day borrowing period</li>
+          <li>Ad-free experience</li>
+          <li>Unlimited downloads</li>
+          <li>Exclusive content access</li>
+        </ul>
+        <button class="purchase-btn" onclick="purchasePlan('Family Plan', 29.99)">Choose Family</button>
+      </div>
+    </div>
+
+    <!-- Individual Books Pricing -->
+    <div class="books-pricing-section">
+      <h2 class="section-title">Individual Book Prices</h2>
+      <p class="section-subtitle">Purchase books individually for your permanent collection</p>
+      
+      <div class="books-grid" id="booksGrid">
+        <!-- Books will be loaded here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 GameVerse Library. All rights reserved.</p>
+  </footer>
+
+  <!-- Payment Modal -->
+  <div class="payment-modal" id="paymentModal">
+    <div class="payment-content">
+      <div class="payment-header">
+        <h3>Complete Your Purchase</h3>
+        <button class="close-btn" onclick="closePaymentModal()">×</button>
+      </div>
+      <div class="payment-body">
+        <div class="payment-book-info" id="paymentBookInfo">
+          <!-- Dynamic content will be inserted here -->
+        </div>
+        
+        <h4>Select Payment Method</h4>
+        <div class="payment-options">
+          <div class="payment-option" onclick="selectPayment('netbanking')">
+            <div class="payment-icon">🏦</div>
+            <div class="payment-details">
+              <div class="payment-title">Net Banking</div>
+              <div class="payment-description">Pay using your bank account</div>
+            </div>
+          </div>
+          <div class="payment-option" onclick="selectPayment('upi')">
+            <div class="payment-icon">📱</div>
+            <div class="payment-details">
+              <div class="payment-title">UPI Payment</div>
+              <div class="payment-description">Pay using UPI apps</div>
+            </div>
+          </div>
+          <div class="payment-option" onclick="selectPayment('credit')">
+            <div class="payment-icon">💳</div>
+            <div class="payment-details">
+              <div class="payment-title">Credit Card</div>
+              <div class="payment-description">Pay using credit card</div>
+            </div>
+          </div>
+          <div class="payment-option" onclick="selectPayment('cash')">
+            <div class="payment-icon">💵</div>
+            <div class="payment-details">
+              <div class="payment-title">Cash on Delivery</div>
+              <div class="payment-description">Pay when book is delivered</div>
+            </div>
+          </div>
+        </div>
+        <button class="pay-now-btn" id="payNowBtn" onclick="processPayment()">Pay Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="success-modal" id="successModal">
+    <div class="success-content">
+      <div class="success-icon">✅</div>
+      <h2 class="success-title">Payment Successful!</h2>
+      <p class="success-message" id="successMessage">
+        Your purchase has been completed successfully. You will receive a confirmation email shortly.
+      </p>
+      <button class="success-btn" onclick="closeSuccessModal()">Continue Shopping</button>
+    </div>
+  </div>
+
+<script>
+  // Book data (same as in book-catalog.html)
+  const books = [
+    {
+      id: 1,
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      genre: "Fiction",
+      year: 1925,
+      price: 12.99,
+      image: "https://images.unsplash.com/photo-1629992101753-56d196c8aabb?w=400"
+    },
+    {
+      id: 2,
+      title: "Sapiens: A Brief History of Humankind",
+      author: "Yuval Noah Harari",
+      genre: "History",
+      year: 2014,
+      price: 18.50,
+      image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400"
+    },
+    {
+      id: 3,
+      title: "1984",
+      author: "George Orwell",
+      genre: "Fiction",
+      year: 1949,
+      price: 10.99,
+      image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=400"
+    },
+    {
+      id: 4,
+      title: "The Selfish Gene",
+      author: "Richard Dawkins",
+      genre: "Science",
+      year: 1976,
+      price: 15.75,
+      image: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=400"
+    },
+    {
+      id: 5,
+      title: "Harry Potter and the Philosopher's Stone",
+      author: "J.K. Rowling",
+      genre: "Fantasy",
+      year: 1997,
+      price: 22.00,
+      image: "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400"
+    },
+    {
+      id: 6,
+      title: "Clean Code",
+      author: "Robert C. Martin",
+      genre: "Technology",
+      year: 2008,
+      price: 35.99,
+      image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400"
+    },
+    {
+      id: 7,
+      title: "Pride and Prejudice",
+      author: "Jane Austen",
+      genre: "Romance",
+      year: 1813,
+      price: 8.99,
+      image: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400"
+    },
+    {
+      id: 8,
+      title: "Murder on the Orient Express",
+      author: "Agatha Christie",
+      genre: "Mystery",
+      year: 1934,
+      price: 11.25,
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400"
+    },
+    {
+      id: 9,
+      title: "The Hobbit",
+      author: "J.R.R. Tolkien",
+      genre: "Fantasy",
+      year: 1937,
+      price: 19.99,
+      image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400"
+    },
+    {
+      id: 10,
+      title: "To Kill a Mockingbird",
+      author: "Harper Lee",
+      genre: "Fiction",
+      year: 1960,
+      price: 14.50,
+      image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400"
+    }
+  ];
+
+  let currentPurchase = null;
+  let selectedPaymentMethod = null;
+
+  // Load books on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    displayBooks();
+  });
+
+  // Display books in grid
+  function displayBooks() {
+    const booksGrid = document.getElementById('booksGrid');
+    booksGrid.innerHTML = '';
+    
+    books.forEach(book => {
+      const bookCard = document.createElement('div');
+      bookCard.className = 'book-price-card';
+      bookCard.innerHTML = `
+        <img src="${book.image}" alt="${book.title}" class="book-price-image">
+        <div class="book-price-info">
+          <h3 class="book-price-title">${book.title}</h3>
+          <p class="book-price-author">by ${book.author}</p>
+          <span class="book-price-genre">${book.genre}</span>
+          <div class="book-price-amount">$${book.price.toFixed(2)}</div>
+          <button class="buy-btn" onclick="purchaseBook(${book.id})">Buy Now</button>
+        </div>
+      `;
+      booksGrid.appendChild(bookCard);
+    });
+  }
+
+  // Purchase individual book
+  function purchaseBook(bookId) {
+    const book = books.find(b => b.id === bookId);
+    if (!book) return;
+    
+    currentPurchase = {
+      type: 'book',
+      item: book,
+      amount: book.price
+    };
+    
+    openPaymentModal();
+  }
+
+  // Purchase membership plan
+  function purchasePlan(planName, price) {
+    currentPurchase = {
+      type: 'membership',
+      item: { name: planName },
+      amount: price
+    };
+    
+    openPaymentModal();
+  }
+
+  // Open payment modal
+  function openPaymentModal() {
+    const paymentBookInfo = document.getElementById('paymentBookInfo');
+    
+    if (currentPurchase.type === 'book') {
+      paymentBookInfo.innerHTML = `
+        <h3 class="payment-book-title">${currentPurchase.item.title}</h3>
+        <p class="payment-book-author">by ${currentPurchase.item.author}</p>
+        <div class="payment-book-price">$${currentPurchase.amount.toFixed(2)}</div>
+      `;
+    } else {
+      paymentBookInfo.innerHTML = `
+        <h3 class="payment-book-title">${currentPurchase.item.name}</h3>
+        <p class="payment-book-author">Monthly Membership Plan</p>
+        <div class="payment-book-price">$${currentPurchase.amount.toFixed(2)}/month</div>
+      `;
+    }
+    
+    selectedPaymentMethod = null;
+    updatePaymentOptions();
+    document.getElementById('paymentModal').style.display = 'flex';
+  }
+
+  // Close payment modal
+  function closePaymentModal() {
+    document.getElementById('paymentModal').style.display = 'none';
+  }
+
+  // Select payment method
+  function selectPayment(method) {
+    selectedPaymentMethod = method;
+    updatePaymentOptions();
+  }
+
+  // Update payment options UI
+  function updatePaymentOptions() {
+    const options = document.querySelectorAll('.payment-option');
+    options.forEach(option => {
+      option.classList.remove('selected');
+    });
+    
+    if (selectedPaymentMethod) {
+      const selectedOption = document.querySelector(`.payment-option[onclick="selectPayment('${selectedPaymentMethod}')"]`);
+      if (selectedOption) {
+        selectedOption.classList.add('selected');
+      }
+    }
+  }
+
+  // Process payment
+  function processPayment() {
+    if (!selectedPaymentMethod) {
+      alert('Please select a payment method');
+      return;
+    }
+    
+    // Simulate payment processing
+    document.getElementById('payNowBtn').textContent = 'Processing...';
+    document.getElementById('payNowBtn').disabled = true;
+    
+    setTimeout(() => {
+      // Save purchase to localStorage
+      savePurchase();
+      
+      // Show success message
+      closePaymentModal();
+      showSuccessModal();
+    }, 2000);
+  }
+
+  // Save purchase to localStorage
+  function savePurchase() {
+    let purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
+    const purchaseData = {
+      ...currentPurchase,
+      paymentMethod: selectedPaymentMethod,
+      timestamp: new Date().toISOString(),
+      status: 'completed'
+    };
+    purchases.push(purchaseData);
+    localStorage.setItem('purchases', JSON.stringify(purchases));
+  }
+
+  // Show success modal
+  function showSuccessModal() {
+    let successMessage = '';
+    
+    if (currentPurchase.type === 'book') {
+      successMessage = `Your book "${currentPurchase.item.title}" has been purchased successfully! Payment method: ${getPaymentMethodName(selectedPaymentMethod)}`;
+    } else {
+      successMessage = `Your ${currentPurchase.item.name} membership has been activated! Payment method: ${getPaymentMethodName(selectedPaymentMethod)}`;
+    }
+    
+    document.getElementById('successMessage').textContent = successMessage;
+    document.getElementById('successModal').style.display = 'flex';
+  }
+
+  // Get payment method name
+  function getPaymentMethodName(method) {
+    const methods = {
+      'netbanking': 'Net Banking',
+      'upi': 'UPI Payment',
+      'credit': 'Credit Card',
+      'cash': 'Cash on Delivery'
+    };
+    return methods[method] || method;
+  }
+
+  // Close success modal
+  function closeSuccessModal() {
+    document.getElementById('successModal').style.display = 'none';
+  }
+
+  // Close modal when clicking outside
+  window.onclick = function(event) {
+    const paymentModal = document.getElementById('paymentModal');
+    const successModal = document.getElementById('successModal');
+    
+    if (event.target === paymentModal) {
+      closePaymentModal();
+    }
+    if (event.target === successModal) {
+      closeSuccessModal();
+    }
+  }
+</script>
+<!-- Include scripts -->
+<script src="./mobile-menu.js"></script>
+</body>
+</html>

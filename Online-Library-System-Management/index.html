@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GameVerse Library — Welcome</title>
+  <link rel="stylesheet" href="./responsive.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      font-family: 'Rajdhani', 'Orbitron', sans-serif;
+      background: 
+        radial-gradient(circle at 20% 30%, #ff3366 0%, transparent 20%),
+        radial-gradient(circle at 80% 70%, #33ccff 0%, transparent 20%),
+        radial-gradient(circle at 40% 80%, #ffcc00 0%, transparent 20%),
+        linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+      animation: backgroundPulse 15s ease-in-out infinite;
+      padding: 20px;
+    }
+
+    @keyframes backgroundPulse {
+      0%, 100% { 
+        background: 
+          radial-gradient(circle at 20% 30%, #ff3366 0%, transparent 20%),
+          radial-gradient(circle at 80% 70%, #33ccff 0%, transparent 20%),
+          radial-gradient(circle at 40% 80%, #ffcc00 0%, transparent 20%),
+          linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+      }
+      33% { 
+        background: 
+          radial-gradient(circle at 80% 30%, #33ccff 0%, transparent 20%),
+          radial-gradient(circle at 40% 70%, #ffcc00 0%, transparent 20%),
+          radial-gradient(circle at 20% 80%, #ff3366 0%, transparent 20%),
+          linear-gradient(225deg, #0f0f1a 0%, #1a1a2e 100%);
+      }
+      66% { 
+        background: 
+          radial-gradient(circle at 40% 30%, #ffcc00 0%, transparent 20%),
+          radial-gradient(circle at 20% 70%, #ff3366 0%, transparent 20%),
+          radial-gradient(circle at 80% 80%, #33ccff 0%, transparent 20%),
+          linear-gradient(315deg, #0f0f1a 0%, #1a1a2e 100%);
+      }
+    }
+
+    .scene {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      height: 500px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(42, 42, 74, 0.8);
+      box-shadow: 0 15px 40px rgba(255, 51, 102, 0.3);
+      border: 2px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      margin: 0 auto;
+    }
+
+    .scene::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #ff3366, #33ccff, #ffcc00);
+      z-index: 10;
+    }
+
+    /* HEADING */
+    .heading {
+      position: absolute;
+      top: 50px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: #ffcc00;
+      font-size: 2.8rem;
+      font-weight: 700;
+      text-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+      z-index: 2;
+      font-family: 'Orbitron', sans-serif;
+      animation: glow 2s ease-in-out infinite alternate;
+      padding: 0 20px;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 15px rgba(255, 204, 0, 0.5); }
+      to { text-shadow: 0 0 25px rgba(255, 204, 0, 0.8), 0 0 35px rgba(255, 204, 0, 0.6); }
+    }
+
+    /* CAPTION */
+    .caption {
+      position: absolute;
+      left: 50%;
+      top: 130px;
+      transform: translateX(-50%);
+      color: #33ccff;
+      font-weight: 600;
+      font-size: 1.5rem;
+      text-shadow: 0 0 10px rgba(51, 204, 255, 0.5);
+      z-index: 2;
+      font-family: 'Rajdhani', sans-serif;
+      text-align: center;
+      width: 100%;
+      padding: 0 20px;
+    }
+
+    /* ENTER BUTTON */
+    .enter-button {
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 15px 40px;
+      background: linear-gradient(135deg, #ff3366, #cc1a4a);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(255, 51, 102, 0.4);
+      transition: all 0.3s ease;
+      z-index: 2;
+      display: inline-block;
+      font-family: 'Rajdhani', sans-serif;
+      border: none;
+      overflow: hidden;
+    }
+
+    .enter-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .enter-button:hover::before {
+      left: 100%;
+    }
+
+    .enter-button:hover {
+      transform: translateX(-50%) scale(1.05);
+      box-shadow: 0 12px 30px rgba(255, 51, 102, 0.6);
+      text-decoration: none;
+      color: white;
+      background: linear-gradient(135deg, #ff1a53, #b3153a);
+    }
+
+    /* GROUND */
+    .ground {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 120px;
+      background: linear-gradient(180deg, rgba(26, 26, 46, 0.9), rgba(10, 10, 20, 0.95));
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
+      z-index: 1;
+      border-top: 2px solid rgba(255, 204, 0, 0.3);
+    }
+
+    /* LIBRARY BUILDING */
+    .library {
+      position: absolute;
+      right: 80px;
+      bottom: 120px;
+      width: 280px;
+      height: 240px;
+      z-index: 3;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+    }
+
+    .library svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* WALKER CONTAINER */
+    .walker {
+      position: absolute;
+      bottom: 140px;
+      left: -180px;
+      z-index: 4;
+      animation: moveAcross 12s linear infinite;
+      filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+    }
+
+    /* WALK MOVEMENT + FADE */
+    @keyframes moveAcross {
+      0%   { transform: translateX(0); opacity: 1; }
+      80%  { transform: translateX(calc(100vw - 400px)); opacity: 1; }
+      90%  { transform: translateX(calc(100vw - 350px)); opacity: 0; }
+      100% { transform: translateX(-180px); opacity: 0; }
+    }
+
+    .person {
+      transform-origin: center bottom;
+      animation: bob 0.6s ease-in-out infinite;
+      width: 140px;
+      height: 220px;
+    }
+
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* FLOATING PARTICLES */
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(255, 204, 0, 0.6);
+      border-radius: 50%;
+      animation: float 6s infinite ease-in-out;
+    }
+
+    .particle:nth-child(1) { top: 20%; left: 10%; width: 8px; height: 8px; animation-delay: 0s; }
+    .particle:nth-child(2) { top: 60%; left: 20%; width: 6px; height: 6px; animation-delay: 1s; }
+    .particle:nth-child(3) { top: 40%; left: 80%; width: 10px; height: 10px; animation-delay: 2s; }
+    .particle:nth-child(4) { top: 80%; left: 70%; width: 7px; height: 7px; animation-delay: 3s; }
+    .particle:nth-child(5) { top: 30%; left: 50%; width: 5px; height: 5px; animation-delay: 4s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.6; }
+      50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+    }
+
+    /* STARS BACKGROUND */
+    .stars {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s infinite ease-in-out;
+    }
+
+    .star:nth-child(1) { top: 15%; left: 15%; width: 2px; height: 2px; animation-delay: 0s; }
+    .star:nth-child(2) { top: 25%; left: 75%; width: 3px; height: 3px; animation-delay: 0.5s; }
+    .star:nth-child(3) { top: 45%; left: 45%; width: 2px; height: 2px; animation-delay: 1s; }
+    .star:nth-child(4) { top: 65%; left: 25%; width: 3px; height: 3px; animation-delay: 1.5s; }
+    .star:nth-child(5) { top: 35%; left: 85%; width: 2px; height: 2px; animation-delay: 2s; }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    /* WINDOWS ACTIVATION NOTICE */
+    .windows-activate {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      font-size: 0.8rem;
+      color: #a9b7d0;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 5px 10px;
+      border-radius: 4px;
+      z-index: 100;
+    }
+
+    /* MOBILE RESPONSIVE DESIGN */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      .scene {
+        height: 400px;
+      }
+      
+      .library { 
+        right: 40px; 
+        width: 180px; 
+        height: 160px; 
+      }
+      
+      .walker { 
+        bottom: 100px; 
+        left: -120px; 
+      }
+      
+      .person {
+        width: 100px;
+        height: 160px;
+      }
+      
+      .heading { 
+        font-size: 2rem; 
+        top: 30px;
+      }
+      
+      .caption {
+        font-size: 1.2rem;
+        top: 100px;
+      }
+      
+      .enter-button {
+        padding: 12px 30px;
+        font-size: 1.1rem;
+        bottom: 50px;
+      }
+      
+      @keyframes moveAcross {
+        0%   { transform: translateX(0); opacity: 1; }
+        80%  { transform: translateX(calc(100vw - 200px)); opacity: 1; }
+        90%  { transform: translateX(calc(100vw - 150px)); opacity: 0; }
+        100% { transform: translateX(-120px); opacity: 0; }
+      }
+    }
+
+    @media (max-width: 480px) {
+      .scene {
+        height: 350px;
+      }
+      
+      .library { 
+        right: 20px; 
+        width: 140px; 
+        height: 120px; 
+      }
+      
+      .walker { 
+        bottom: 80px; 
+        left: -100px; 
+      }
+      
+      .person {
+        width: 80px;
+        height: 130px;
+      }
+      
+      .heading { 
+        font-size: 1.6rem; 
+        top: 25px;
+      }
+      
+      .caption {
+        font-size: 1rem;
+        top: 90px;
+      }
+      
+      .enter-button {
+        padding: 10px 25px;
+        font-size: 1rem;
+        bottom: 40px;
+      }
+      
+      .ground {
+        height: 100px;
+      }
+      
+      @keyframes moveAcross {
+        0%   { transform: translateX(0); opacity: 1; }
+        80%  { transform: translateX(calc(100vw - 150px)); opacity: 1; }
+        90%  { transform: translateX(calc(100vw - 100px)); opacity: 0; }
+        100% { transform: translateX(-100px); opacity: 0; }
+      }
+    }
+
+    /* EXTRA SMALL DEVICES */
+    @media (max-width: 320px) {
+      .scene {
+        height: 300px;
+      }
+      
+      .library { 
+        right: 10px; 
+        width: 100px; 
+        height: 90px; 
+      }
+      
+      .walker { 
+        bottom: 70px; 
+        left: -80px; 
+      }
+      
+      .person {
+        width: 60px;
+        height: 100px;
+      }
+      
+      .heading { 
+        font-size: 1.4rem; 
+      }
+      
+      .caption {
+        font-size: 0.9rem;
+        top: 80px;
+      }
+      
+      .enter-button {
+        padding: 8px 20px;
+        font-size: 0.9rem;
+        bottom: 30px;
+      }
+      
+      .ground {
+        height: 80px;
+      }
+    }
+
+    /* LAPTOP FIXES */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .scene {
+        height: 450px;
+      }
+      
+      .library {
+        right: 60px;
+        width: 220px;
+        height: 190px;
+      }
+      
+      .heading {
+        font-size: 2.4rem;
+      }
+      
+      .caption {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="scene">
+    <!-- STARS BACKGROUND -->
+    <div class="stars">
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+    </div>
+
+    <!-- FLOATING PARTICLES -->
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    
+    <!-- HEADING -->
+    <h1 class="heading">🎮 Welcome to GameVerse Library!</h1>
+  
+    <!-- WALKING PERSON -->
+    <div class="walker">
+      <svg class="person" viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- HEAD -->
+        <circle cx="60" cy="36" r="22" fill="#ffddb0"/>
+        <!-- HAIR -->
+        <path d="M38 24 Q60 6 82 24 Q75 18 60 18 Q45 18 38 24Z" fill="#2b2b2b"/>
+        <!-- EYES -->
+        <circle cx="52" cy="36" r="3" fill="#111"/>
+        <circle cx="68" cy="36" r="3" fill="#111"/>
+        <!-- NOSE -->
+        <path d="M60 38 Q62 44 60 46" stroke="#d98c4a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        <!-- MOUTH -->
+        <path d="M54 50 Q60 54 66 50" stroke="#d45d00" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- BODY -->
+        <rect x="40" y="56" width="40" height="70" rx="10" fill="#457b9d"/>
+        <!-- ARMS -->
+        <rect x="25" y="64" width="12" height="38" rx="6" fill="#ffb703" transform="rotate(-8 31 84)"/>
+        <rect x="83" y="64" width="12" height="38" rx="6" fill="#ffb703" transform="rotate(8 89 84)"/>
+        <!-- BOOK -->
+        <rect x="48" y="76" width="20" height="26" rx="2" fill="#ffcc00"/>
+        <line x1="50" y1="88" x2="66" y2="88" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- LEGS -->
+        <rect x="46" y="126" width="12" height="50" rx="6" fill="#2b2b2b"/>
+        <rect x="62" y="126" width="12" height="50" rx="6" fill="#2b2b2b"/>
+        <!-- SHOES -->
+        <rect x="40" y="176" width="20" height="8" rx="4" fill="#111827"/>
+        <rect x="60" y="176" width="20" height="8" rx="4" fill="#111827"/>
+      </svg>
+    </div>
+
+    <!-- LIBRARY BUILDING -->
+    <div class="library">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="100,10 10,60 190,60" fill="#ffcc00"/>
+        <rect x="20" y="60" width="160" height="120" rx="8" fill="#ffffff" opacity="0.15"/>
+        <g fill="#fff" opacity="0.9">
+          <rect x="35" y="80" width="30" height="28" rx="3"/>
+          <rect x="75" y="80" width="30" height="28" rx="3"/>
+          <rect x="115" y="80" width="30" height="28" rx="3"/>
+          <rect x="35" y="118" width="30" height="28" rx="3"/>
+          <rect x="75" y="118" width="30" height="28" rx="3"/>
+          <rect x="115" y="118" width="30" height="28" rx="3"/>
+        </g>
+        <rect x="88" y="130" width="24" height="50" rx="4" fill="#ff3366"/>
+        <rect x="50" y="60" width="100" height="18" rx="6" fill="#33ccff" opacity="0.9"/>
+        <text x="100" y="74" font-size="10" fill="#fff" font-family="sans-serif" text-anchor="middle" font-weight="bold">GAMEVERSE LIB</text>
+      </svg>
+    </div>
+
+    <div class="ground"></div>
+    
+    <!-- ENTER BUTTON -->
+    <a href="./login.html" class="enter-button">Enter Library →</a>
+  </div>
+</body>
+</html>

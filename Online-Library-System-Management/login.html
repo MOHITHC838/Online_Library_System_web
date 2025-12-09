@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GameVerse Library — Gaming Sign-up</title>
+<link rel="stylesheet" href="./responsive.css">
+<style>
+  :root{
+    --book-w: 620px;
+    --book-h: 420px;
+    --open-time: 2000ms;
+    --turn-time: 700ms;
+    --primary: #ff3366;
+    --secondary: #33ccff;
+    --accent: #ffcc00;
+    --dark: #1a1a2e;
+    --darker: #0f0f1a;
+    --success: #00ff99;
+    --warning: #ff9900;
+    --paper-1: #2a2a4a;
+    --paper-2: #1e1e36;
+    --glow-primary: rgba(255, 51, 102, 0.6);
+    --glow-secondary: rgba(51, 204, 255, 0.6);
+    --glow-accent: rgba(255, 204, 0, 0.6);
+  }
+
+  /* Gaming Background */
+  html,body{
+    height:100%; 
+    margin:0; 
+    font-family: 'Rajdhani', 'Orbitron', 'Segoe UI', sans-serif; 
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  body{
+    display:flex; 
+    align-items:center; 
+    justify-content:center;
+    min-height: 100vh;
+    padding: 20px;
+    background: 
+      radial-gradient(circle at 20% 30%, var(--primary) 0%, transparent 20%),
+      radial-gradient(circle at 80% 70%, var(--secondary) 0%, transparent 20%),
+      radial-gradient(circle at 40% 80%, var(--accent) 0%, transparent 20%),
+      linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+    animation: backgroundPulse 15s ease-in-out infinite;
+  }
+
+  @keyframes backgroundPulse {
+    0%, 100% { 
+      background: 
+        radial-gradient(circle at 20% 30%, var(--primary) 0%, transparent 20%),
+        radial-gradient(circle at 80% 70%, var(--secondary) 0%, transparent 20%),
+        radial-gradient(circle at 40% 80%, var(--accent) 0%, transparent 20%),
+        linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+    }
+    33% { 
+      background: 
+        radial-gradient(circle at 80% 30%, var(--secondary) 0%, transparent 20%),
+        radial-gradient(circle at 40% 70%, var(--accent) 0%, transparent 20%),
+        radial-gradient(circle at 20% 80%, var(--primary) 0%, transparent 20%),
+        linear-gradient(225deg, var(--darker) 0%, var(--dark) 100%);
+    }
+    66% { 
+      background: 
+        radial-gradient(circle at 40% 30%, var(--accent) 0%, transparent 20%),
+        radial-gradient(circle at 20% 70%, var(--primary) 0%, transparent 20%),
+        radial-gradient(circle at 80% 80%, var(--secondary) 0%, transparent 20%),
+        linear-gradient(315deg, var(--darker) 0%, var(--dark) 100%);
+    }
+  }
+
+  /* Floating stage - Responsive */
+  .stage{ 
+    width: 100%;
+    max-width: 800px;
+    perspective: 1800px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    animation: floatStage 6s ease-in-out infinite;
+    position: relative;
+  }
+
+  @keyframes floatStage {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(0.5deg); }
+  }
+
+  .book{ 
+    width: var(--book-w); 
+    height: var(--book-h); 
+    position: relative; 
+    transform-style: preserve-3d; 
+  }
+
+  /* Enhanced shadow with animation */
+  .book::after{
+    content:""; 
+    position:absolute; 
+    left:30px; 
+    right:30px; 
+    bottom:-42px; 
+    height:40px; 
+    border-radius:50%; 
+    filter: blur(20px);
+    background: linear-gradient(90deg, rgba(0,0,0,0.5), rgba(255,51,102,0.3)); 
+    z-index:0;
+    animation: shadowPulse 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes shadowPulse {
+    from { transform: scale(0.95); opacity: 0.7; }
+    to { transform: scale(1.05); opacity: 1; }
+  }
+
+  /* Enhanced back cover with depth */
+  .back-cover{ 
+    position:absolute; 
+    left:0; 
+    top:0; 
+    width:100%; 
+    height:100%; 
+    border-radius:10px; 
+    background: linear-gradient(120deg, #2a1a4a, #1a0f2e); 
+    transform: translateZ(-10px); 
+    z-index:6;
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+  }
+
+  /* Enhanced front cover with glow */
+  .cover{
+    position:absolute; 
+    left:0; 
+    top:0; 
+    width:100%; 
+    height:100%; 
+    border-radius:10px; 
+    z-index:50; 
+    transform-origin:left center;
+    backface-visibility:hidden; 
+    display:flex; 
+    flex-direction:column; 
+    align-items:center; 
+    justify-content:center;
+    color:var(--accent); 
+    font-weight:800; 
+    letter-spacing:1px;
+    background:
+      repeating-linear-gradient(45deg, rgba(0,0,0,0.1) 0 2px, rgba(255,255,255,0.05) 2px 6px),
+      linear-gradient(135deg,#4a1a4a,#2e0f2e);
+    box-shadow: 
+      0 10px 30px rgba(0,0,0,0.7),
+      0 0 60px var(--glow-primary);
+    transition: transform var(--open-time) cubic-bezier(.18,.9,.32,1), box-shadow 1s ease;
+    animation: coverGlow 4s ease-in-out infinite alternate;
+  }
+
+  @keyframes coverGlow {
+    from { box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 40px var(--glow-primary); }
+    to { box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 80px var(--glow-primary); }
+  }
+
+  .book.open .cover{ 
+    transform: rotateY(-155deg); 
+    z-index:5;
+    animation: none;
+  }
+
+  /* Enhanced tabs with hover effects - FIXED POSITION */
+  .tabs{ 
+    position: absolute;
+    top: -70px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 18px;
+    z-index: 200;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .tab { 
+    padding: 12px 24px;
+    border-radius: 8px 8px 0 0;
+    background: linear-gradient(180deg, #4a2a6a, #3a1a5a);
+    color: var(--secondary);
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+    user-select: none;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+    font-size: 16px;
+    min-width: 120px;
+    text-align: center;
+    z-index: 201;
+  }
+
+  .tab::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .tab:hover::before {
+    left: 100%;
+  }
+
+  .tab:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.6);
+  }
+
+  .tab.active{ 
+    outline: 2px solid rgba(51, 204, 255, 0.3);
+    transform: translateY(0);
+    background: linear-gradient(180deg, var(--primary), #cc1a4a);
+    animation: tabPulse 2s infinite;
+  }
+
+  @keyframes tabPulse {
+    0%, 100% { box-shadow: 0 8px 18px rgba(0,0,0,0.5); }
+    50% { box-shadow: 0 8px 18px var(--glow-primary); }
+  }
+
+  /* Enhanced inner pages */
+  .inner{ 
+    position:absolute; 
+    left:0; 
+    top:0; 
+    width:100%; 
+    height:100%; 
+    transform-style:preserve-3d; 
+    z-index:20; 
+    pointer-events:none; 
+  }
+
+  .left{
+    position:absolute; 
+    left:0; 
+    top:0; 
+    width:50%; 
+    height:100%; 
+    background: linear-gradient(180deg,var(--paper-1),var(--paper-2));
+    border-right:1px solid rgba(255,255,255,0.1); 
+    box-shadow: inset 6px 0 18px rgba(0,0,0,0.3); 
+    padding:28px; 
+    box-sizing:border-box; 
+    font-family: 'Rajdhani', sans-serif; 
+    z-index:22;
+    pointer-events:auto;
+    animation: pageGlow 8s ease-in-out infinite;
+  }
+
+  @keyframes pageGlow {
+    0%, 100% { background: linear-gradient(180deg,var(--paper-1),var(--paper-2)); }
+    50% { background: linear-gradient(180deg,#3a3a5a,#2a2a4a); }
+  }
+
+  .right{ 
+    position:absolute; 
+    right:0; 
+    top:0; 
+    width:50%; 
+    height:100%; 
+    padding:0; 
+    box-sizing:border-box; 
+    z-index:23; 
+    pointer-events:auto; 
+  }
+
+  .right-page{
+    position:relative; 
+    width:100%; 
+    height:100%; 
+    background: linear-gradient(180deg,var(--paper-1),var(--paper-2)); 
+    border-left:1px solid rgba(255,255,255,0.1);
+    box-shadow: inset -6px 0 18px rgba(0,0,0,0.3); 
+    padding:28px; 
+    box-sizing:border-box; 
+    border-radius:0 10px 10px 0; 
+    overflow:auto;
+  }
+
+  /* Enhanced flip animation */
+  .flip-overlay{ 
+    position:absolute; 
+    right:0; 
+    top:0; 
+    width:50%; 
+    height:100%; 
+    transform-origin:left center; 
+    z-index:40; 
+    pointer-events:none; 
+    display:flex; 
+    align-items:center; 
+    justify-content:center; 
+    perspective:1000px;
+  }
+  
+  .flip-face{ 
+    width:100%; 
+    height:100%; 
+    border-radius:0 10px 10px 0; 
+    background: linear-gradient(180deg,var(--paper-1),var(--paper-2)); 
+    box-shadow: 0 6px 24px rgba(0,0,0,0.5); 
+    border-left:1px solid rgba(255,255,255,0.1); 
+    overflow:hidden; 
+    padding:28px; 
+    box-sizing:border-box;
+  }
+  
+  @keyframes flipAnim {
+    0%   { transform: rotateY(0deg); }
+    50%  { transform: rotateY(-100deg) translateZ(20px); }
+    100% { transform: rotateY(-180deg); }
+  }
+  
+  .flip-overlay.anim { 
+    animation: flipAnim var(--turn-time) cubic-bezier(.18,.9,.32,1) forwards;
+  }
+
+  /* Enhanced title with animation */
+  .title{ 
+    font-size: 22px; 
+    color:#ffffff; 
+    text-align:center; 
+    margin-bottom:20px; 
+    font-family:'Orbitron', sans-serif;
+    animation: titleSlideIn 0.6s ease-out;
+    text-shadow: 0 0 10px var(--glow-secondary);
+  }
+
+  @keyframes titleSlideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  /* Enhanced form fields */
+  .field{ 
+    margin:15px 0; 
+    position: relative; 
+  }
+
+  input[type="text"], input[type="email"], input[type="password"], input[type="tel"], select{
+    width:100%; 
+    padding:12px; 
+    border-radius:6px; 
+    border:1px solid rgba(255,255,255,0.2); 
+    background:rgba(30,30,50,0.8); 
+    box-sizing:border-box;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+    color: white;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+  }
+
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 2px var(--glow-secondary), 0 0 15px rgba(51, 204, 255, 0.3);
+    transform: translateY(-2px);
+    background: rgba(40,40,70,0.8);
+  }
+
+  /* Enhanced buttons */
+  .btn{ 
+    margin-top:15px; 
+    padding:12px 24px; 
+    border-radius:6px; 
+    border:none; 
+    cursor:pointer; 
+    background: var(--primary); 
+    color:white; 
+    font-weight:700;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Rajdhani', sans-serif;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    font-size: 16px;
+    min-width: 120px;
+  }
+
+  .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .btn:hover::before {
+    left: 100%;
+  }
+
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 15px var(--glow-primary);
+    background: #ff1a53;
+  }
+
+  .btn:active {
+    transform: translateY(-1px);
+  }
+
+  .btn.secondary{ background:var(--secondary); color:white; }
+
+  .button-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* Enhanced avatar grid */
+  .avatar-grid{ 
+    display:flex; 
+    gap:10px; 
+    flex-wrap:wrap; 
+    justify-content:center; 
+    margin-top:15px; 
+  }
+
+  .avatar{ 
+    width: 70px; 
+    height: 70px; 
+    border-radius: 50%; 
+    cursor: pointer; 
+    border: 3px solid transparent; 
+    object-fit:cover; 
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation: avatarFloat 4s ease-in-out infinite alternate;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  }
+
+  .avatar:hover {
+    transform: scale(1.15) rotate(5deg);
+    border-color: var(--secondary);
+    box-shadow: 0 0 25px var(--glow-secondary), 0 10px 25px rgba(0,0,0,0.4);
+    animation: avatarFloatHover 2s ease-in-out infinite alternate;
+  }
+
+  .avatar.sel {
+    border-color: var(--accent);
+    box-shadow: 0 0 35px var(--glow-accent), 0 15px 35px rgba(0,0,0,0.5);
+    transform: scale(1.2);
+    animation: avatarPulse 2s infinite;
+  }
+
+  @keyframes avatarFloat {
+    from { transform: translateY(0px) rotate(0deg); }
+    to { transform: translateY(-8px) rotate(2deg); }
+  }
+
+  @keyframes avatarFloatHover {
+    from { transform: scale(1.15) rotate(5deg) translateY(0px); }
+    to { transform: scale(1.15) rotate(5deg) translateY(-5px); }
+  }
+
+  @keyframes avatarPulse {
+    0%, 100% { box-shadow: 0 0 35px var(--glow-accent), 0 15px 35px rgba(0,0,0,0.5); }
+    50% { box-shadow: 0 0 45px var(--glow-accent), 0 20px 45px rgba(0,0,0,0.6); }
+  }
+
+  /* Enhanced selection grid */
+  .selection-grid{ 
+    display:flex; 
+    flex-wrap:wrap; 
+    gap:10px; 
+    justify-content:center; 
+    margin-top:15px; 
+  }
+
+  .sel-btn{ 
+    padding:10px 14px; 
+    border-radius:8px; 
+    border:1px solid rgba(255,255,255,0.2); 
+    background:rgba(40,40,70,0.7); 
+    cursor:pointer; 
+    user-select:none; 
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation: fadeInUp 0.5s ease-out;
+    color: #ccc;
+    font-size: 14px;
+    text-align: center;
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .sel-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    background: rgba(50,50,90,0.7);
+    color: white;
+  }
+
+  .sel-btn.sel{ 
+    background:linear-gradient(135deg, var(--primary), var(--secondary)); 
+    color:white; 
+    transform:translateY(-3px) scale(1.05);
+    box-shadow: 0 5px 15px var(--glow-secondary);
+    animation: selPulse 2s infinite;
+  }
+
+  @keyframes selPulse {
+    0%, 100% { box-shadow: 0 5px 15px var(--glow-secondary); }
+    50% { box-shadow: 0 5px 20px var(--glow-primary); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Enhanced author cards */
+  .author-card {
+    text-align:center; 
+    background:transparent; 
+    border:none; 
+    border-radius:12px; 
+    padding:10px 12px; 
+    width:110px;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  .author-card:hover {
+    transform: translateY(-5px) scale(1.05);
+    background: rgba(50,50,90,0.3);
+  }
+
+  .author-card:hover img {
+    transform: scale(1.1);
+    border-color: var(--secondary);
+    box-shadow: 0 0 15px var(--glow-secondary);
+  }
+
+  .author-card.sel {
+    transform: translateY(-5px) scale(1.05);
+    background: rgba(50,50,90,0.5);
+  }
+
+  .author-card.sel img {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 20px var(--glow-accent), 0 0 40px rgba(255, 204, 0, 0.3);
+    transform: scale(1.1);
+    animation: imgPulse 2s infinite;
+  }
+
+  @keyframes imgPulse {
+    0%, 100% { box-shadow: 0 0 20px var(--glow-accent), 0 0 40px rgba(255, 204, 0, 0.3); }
+    50% { box-shadow: 0 0 30px var(--glow-accent), 0 0 50px rgba(255, 204, 0, 0.4); }
+  }
+
+  /* Enhanced edges */
+  .edges{ 
+    position:absolute; 
+    right:-18px; 
+    top:18px; 
+    width:18px; 
+    height:calc(100% - 36px); 
+    border-radius:3px; 
+    z-index:12; 
+    background: repeating-linear-gradient(to bottom,#4a3a8a 0px,#4a3a8a 3px,#5a4a9a 3px,#5a4a9a 6px); 
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    animation: edgeShine 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes edgeShine {
+    from { background: repeating-linear-gradient(to bottom,#4a3a8a 0px,#4a3a8a 3px,#5a4a9a 3px,#5a4a9a 6px); }
+    to { background: repeating-linear-gradient(to bottom,#5a4a9a 0px,#5a4a9a 3px,#6a5aaa 3px,#6a5aaa 6px); }
+  }
+
+  .note{ 
+    font-size:14px; 
+    color:#aaa; 
+    text-align:center; 
+    margin-top:15px; 
+    line-height: 1.4;
+  }
+
+  /* Success animation */
+  .success-animation {
+    display: none;
+    text-align: center;
+    animation: successReveal 1s ease-out forwards;
+  }
+
+  @keyframes successReveal {
+    from { opacity: 0; transform: scale(0.8) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .checkmark {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 2;
+    stroke: var(--success);
+    stroke-miterlimit: 10;
+    margin: 20px auto;
+    box-shadow: inset 0px 0px 0px var(--success);
+    animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+  }
+
+  .checkmark__circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 2;
+    stroke-miterlimit: 10;
+    stroke: var(--success);
+    fill: none;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+  }
+
+  .checkmark__check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+  }
+
+  @keyframes stroke {
+    100% { stroke-dashoffset: 0; }
+  }
+
+  @keyframes scale {
+    0%, 100% { transform: none; }
+    50% { transform: scale3d(1.1, 1.1, 1); }
+  }
+
+  @keyframes fill {
+    100% { box-shadow: inset 0px 0px 0px 40px rgba(0, 255, 153, 0.1); }
+  }
+
+  /* Mobile Responsive Design */
+  @media (max-width: 768px) {
+    :root{ 
+      --book-w: 95vw;
+      --book-h: 75vh;
+      --open-time: 1500ms;
+      --turn-time: 600ms;
+    }
+    
+    body {
+      padding: 60px 10px 20px 10px; /* Added top padding for tabs */
+      align-items: flex-start;
+      min-height: 100vh;
+      overflow-y: auto;
+    }
+    
+    .stage {
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+    }
+    
+    .book {
+      width: var(--book-w);
+      height: var(--book-h);
+      max-height: 500px;
+      min-height: 400px;
+    }
+    
+    /* FIXED: Tabs positioning for mobile */
+    .tabs {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      gap: 10px;
+      z-index: 1000;
+      width: 90%;
+      max-width: 400px;
+    }
+    
+    .tab {
+      padding: 12px 20px;
+      font-size: 14px;
+      min-width: 110px;
+      z-index: 1001;
+    }
+    
+    .left, .right-page {
+      padding: 20px;
+    }
+    
+    .title {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+    
+    input[type="text"], input[type="email"], input[type="password"], input[type="tel"], select {
+      padding: 14px;
+      font-size: 16px;
+    }
+    
+    .btn {
+      padding: 14px 20px;
+      font-size: 16px;
+      min-width: 110px;
+    }
+    
+    .button-group {
+      gap: 10px;
+    }
+    
+    .avatar {
+      width: 60px;
+      height: 60px;
+    }
+    
+    .sel-btn {
+      padding: 10px 12px;
+      font-size: 13px;
+      min-width: 90px;
+    }
+    
+    .author-card {
+      width: 100px;
+      padding: 8px 10px;
+    }
+    
+    .author-card img {
+      width: 70px;
+      height: 70px;
+    }
+    
+    .note {
+      font-size: 13px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    :root{ 
+      --book-w: 92vw;
+      --book-h: 70vh;
+    }
+    
+    body {
+      padding: 55px 8px 15px 8px;
+    }
+    
+    .tabs {
+      gap: 8px;
+      width: 95%;
+    }
+    
+    .tab {
+      padding: 10px 16px;
+      font-size: 13px;
+      min-width: 100px;
+    }
+    
+    .left, .right-page {
+      padding: 15px;
+    }
+    
+    .title {
+      font-size: 18px;
+    }
+    
+    .btn {
+      padding: 12px 16px;
+      font-size: 14px;
+      min-width: 100px;
+    }
+    
+    .avatar {
+      width: 50px;
+      height: 50px;
+    }
+    
+    .avatar-grid {
+      gap: 8px;
+    }
+    
+    .sel-btn {
+      padding: 8px 10px;
+      font-size: 12px;
+      min-width: 80px;
+    }
+    
+    .selection-grid {
+      gap: 8px;
+    }
+    
+    .author-card {
+      width: 90px;
+      padding: 6px 8px;
+    }
+    
+    .author-card img {
+      width: 60px;
+      height: 60px;
+    }
+  }
+
+  @media (max-width: 320px) {
+    :root{ 
+      --book-w: 90vw;
+      --book-h: 65vh;
+    }
+    
+    .tab {
+      padding: 8px 12px;
+      font-size: 12px;
+      min-width: 90px;
+    }
+    
+    .button-group {
+      flex-direction: column;
+    }
+    
+    .button-group .btn {
+      width: 100%;
+    }
+  }
+
+  /* Landscape mobile optimization */
+  @media (max-height: 600px) and (orientation: landscape) {
+    :root{ 
+      --book-h: 80vh;
+    }
+    
+    body {
+      padding: 50px 5px 5px 5px;
+    }
+    
+    .book {
+      max-height: 450px;
+    }
+    
+    .tabs {
+      top: 5px;
+    }
+    
+    .left, .right-page {
+      padding: 15px;
+    }
+    
+    .title {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    
+    .field {
+      margin: 10px 0;
+    }
+    
+    .button-group {
+      margin-top: 15px;
+    }
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="stage">
+  <div class="book" id="book">
+    <div class="tabs">
+      <div class="tab" id="tab-login" onclick="activateStep(0)">LOGIN</div>
+      <div class="tab" id="tab-signup" onclick="activateStep(1)">SIGN UP</div>
+    </div>
+
+    <div class="cover" id="cover">
+      <div style="text-align:center;">
+        <div style="font-size:26px; color:var(--accent); letter-spacing:1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">GAMEVERSE LIBRARY</div>
+        <div style="font-size:12px; margin-top:6px; color:rgba(255,255,255,0.7);">Your gaming knowledge base</div>
+      </div>
+    </div>
+
+    <div class="back-cover"></div>
+
+    <div class="inner" id="inner">
+      <div class="left" id="left">
+        <div id="leftContent">
+          <div style="text-align:center; margin-top:16px;">
+            <div style="font-size:18px; color:#ffffff; font-weight:700;">Welcome</div>
+            <div class="note">Click Login or Sign Up above. Each step turns a page.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right" id="right">
+        <div class="right-page" id="rightPage">
+          <div class="title">Welcome</div>
+          <div class="note">Click Login or Sign Up above to begin.</div>
+        </div>
+
+        <div class="flip-overlay" id="flipOverlay" aria-hidden="true"><div class="flip-face" id="flipFace"></div></div>
+
+        <div class="edges" aria-hidden="false"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- Config & DOM refs ---------- */
+const book = document.getElementById('book');
+const rightPage = document.getElementById('rightPage');
+const flipOverlay = document.getElementById('flipOverlay');
+const flipFace = document.getElementById('flipFace');
+const tabLogin = document.getElementById('tab-login');
+const tabSignup = document.getElementById('tab-signup');
+const leftContent = document.getElementById('leftContent');
+
+const TURN = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--turn-time')) || 700;
+const OPEN = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--open-time')) || 2000;
+
+let currentStep = null;
+let signupData = {};
+
+/* ---------- Enhanced Step HTML templates ---------- */
+const STEP_HTML = [];
+STEP_HTML[0] = `
+  <div class="title">Login</div>
+  <div class="field"><input id="login_ident" type="text" placeholder="Email or username"></div>
+  <div class="field"><input id="login_pass" type="password" placeholder="Password"></div>
+  <div class="button-group">
+    <a href="homepage.html" class="btn" onclick="return handleLogin()">Login</a>
+    <button class="btn secondary" onclick="closeBook()">Back</button>
+  </div>
+  <div class="note">Demo only: credentials stored in localStorage.</div>
+`;
+
+STEP_HTML[1] = `
+  <div class="title">Sign Up – Step 1</div>
+  <div class="field"><input id="su_name" type="text" placeholder="Full name"></div>
+  <div class="field"><input id="su_email" type="email" placeholder="Email"></div>
+  <div class="field"><input id="su_phone" type="tel" placeholder="Phone (optional)"></div>
+  <div class="button-group">
+    <button class="btn" onclick="nextStep()">Next →</button>
+    <button class="btn secondary" onclick="activateStep(0)">Cancel</button>
+  </div>
+`;
+
+STEP_HTML[2] = `
+  <div class="title">Sign Up – Step 2</div>
+  <div class="field"><input id="su_pass" type="password" placeholder="Password"></div>
+  <div class="field"><input id="su_confirm" type="password" placeholder="Confirm password"></div>
+  <div class="button-group">
+    <button class="btn" onclick="nextStep()">Next →</button>
+    <button class="btn secondary" onclick="prevStep()">← Back</button>
+  </div>
+`;
+
+STEP_HTML[3] = (() => {
+  const seeds = ['warrior','mage','archer','ninja','knight','wizard','rogue','paladin'];
+  const imgs = seeds.map(s => `<img src="https://api.dicebear.com/6.x/adventurer/svg?seed=${encodeURIComponent(s)}" class="avatar" data-src="https://api.dicebear.com/6.x/adventurer/svg?seed=${encodeURIComponent(s)}" onclick="selectAvatar(this)" alt="avatar">`).join('');
+  return `
+    <div class="title">Choose Avatar</div>
+    <div class="avatar-grid">${imgs}</div>
+    <div class="button-group">
+      <button class="btn" onclick="nextStep()">Next →</button>
+      <button class="btn secondary" onclick="prevStep()">← Back</button>
+    </div>
+  `;
+})();
+
+STEP_HTML[4] = `
+  <div class="title">Choose Favorite Authors</div>
+  <div class="selection-grid" style="justify-content:center;">
+    ${[
+      { name: "William Shakespeare", img: "../image/william_shakespeare.jpg" },
+      { name: "J.K. Rowling", img: "../image/j.k_rowling.jpg" },
+      { name: "Jane Austen", img: "../image/jane_austen.jpg" }, // Fixed: austen not auster
+      { name: "Charles Dickens", img: "../image/charles_dickens.jpg" },
+      { name: "George Orwell", img: "../image/george_orwell.jpg" },
+      { name: "Sujatha Rangarajan", img: "../image/sujatha_rangarajan.jpg" },
+      { name: "C.N. Annadurai", img: "../image/c_n_annadurai.jpg" }, // Fixed name
+      { name: "Ramanichandran", img: "../image/ramanichandran.jpg" },
+      { name: "Jeyakanthan", img: "../image/jeyakanthan.jpg" },
+      { name: "Vaiko", img: "../image/vaiko.jpg" }
+    ].map(a => `
+      <div class="author-card sel-btn" onclick="toggleSel(this)" style="text-align:center; background:transparent; border:none; border-radius:12px; padding:10px 12px; width:110px;">
+        <img src="${a.img}" alt="${a.name}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; margin-bottom:6px; border:2px solid transparent; transition:all 0.3s ease;" onerror="handleImageError(this, '${a.name}')">
+        <div style="font-size:13px; color:#ffffff; font-weight:600;">${a.name}</div>
+      </div>
+    `).join('')}
+  </div>
+  <div class="button-group">
+    <button class="btn" onclick="nextStep()">Next →</button>
+    <button class="btn secondary" onclick="prevStep()">← Back</button>
+  </div>
+`;
+
+// Add this function to handle image errors better
+function handleImageError(img, authorName) {
+  // Create a colored placeholder with initials
+  const names = authorName.split(' ');
+  const initials = names.map(n => n[0]).join('').toUpperCase();
+  const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD'];
+  const color = colors[authorName.length % colors.length];
+  
+  // Create SVG placeholder
+  const svg = `
+    <svg width="80" height="80" xmlns="http://www.w3.org/2000/svg">
+      <rect width="80" height="80" rx="40" fill="${color}"/>
+      <text x="50%" y="50%" font-family="Arial" font-size="28" font-weight="bold" 
+            fill="white" text-anchor="middle" dy=".3em">${initials}</text>
+    </svg>
+  `;
+  
+  // Convert SVG to data URL
+  const dataUrl = 'data:image/svg+xml;base64,' + btoa(svg);
+  img.src = dataUrl;
+  img.alt = authorName + ' (Image not available)';
+  
+  // Prevent further error loops
+  img.onerror = null;
+}
+
+STEP_HTML[5] = `
+  <div class="title">Choose Genres</div>
+  <div class="selection-grid">
+    ${["Scientific","Humor","Non-fiction","Fantasy","Romance","Mystery","Adventure","History"].map(g => `<div class="sel-btn" onclick="toggleSel(this)">${g}</div>`).join('')}
+  </div>
+  <div class="button-group">
+    <a href="homepage.html" class="btn" onclick="return finish()">Finish</a>
+    <button class="btn secondary" onclick="prevStep()">← Back</button>
+  </div>
+`;
+
+/* Success step */
+STEP_HTML[6] = `
+  <div class="success-animation" id="successAnimation">
+    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+      <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+      <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+    </svg>
+    <div class="title">Welcome to GameVerse Library!</div>
+    <div class="note">Your account has been created successfully</div>
+    <div class="button-group">
+      <a href="homepage.html" class="btn">Enter Library</a>
+    </div>
+  </div>
+`;
+
+/* ---------- Enhanced Core Functions ---------- */
+function updateLeft(){
+  let html = `<div style="text-align:center; margin-top:16px;"><div style="font-size:18px; color:#ffffff; font-weight:700;">${currentStep===0?'Login':(currentStep? 'Sign Up':'Welcome')}</div>`;
+  if(currentStep === null) html += `<div class="note">Click Login or Sign Up above. Each step turns a page.</div>`;
+  else if(currentStep === 0) html += `<div class="note">Enter credentials to login.</div>`;
+  else html += `<div class="note">Step ${currentStep} of ${STEP_HTML.length-2}. Fill details and flip pages.</div>`;
+  html += `</div>`;
+  leftContent.innerHTML = html;
+}
+
+function activateStep(idx){
+  tabLogin.classList.remove('active'); tabSignup.classList.remove('active');
+  if(idx === 0) tabLogin.classList.add('active'); else tabSignup.classList.add('active');
+
+  if(idx >= 1 && !book.classList.contains('open')){
+    book.classList.add('open');
+    currentStep = null;
+    updateLeft();
+    setTimeout(()=> flipTo(idx), OPEN + 30);
+  } else {
+    flipTo(idx);
+  }
+}
+
+function flipTo(target){
+  if(currentStep === target) { renderStep(target); return; }
+
+  flipFace.innerHTML = rightPage.innerHTML;
+  flipOverlay.classList.add('anim');
+  flipOverlay.style.display = 'block';
+
+  const mid = Math.max(60, Math.floor(TURN/2));
+  setTimeout(()=> renderStep(target), mid);
+
+  setTimeout(()=> {
+    flipOverlay.classList.remove('anim');
+    flipOverlay.style.display = 'none';
+    currentStep = target;
+    updateLeft();
+    focusFirstRightInput();
+    
+    // FIXED: Add null check for elements before animating
+    const elements = rightPage.querySelectorAll('.title, .field, .btn, .avatar, .sel-btn, .author-card');
+    elements.forEach((el, index) => {
+      if (el) { // Check if element exists
+        el.style.animation = `fadeInUp 0.6s ease-out ${index * 0.1}s both`;
+      }
+    });
+  }, TURN + 20);
+}
+
+function renderStep(idx){
+  if(idx === null || idx === undefined){
+    rightPage.innerHTML = `<div class="title">Welcome</div><div class="note">Click Login or Sign Up above to begin.</div>`;
+    currentStep = null;
+    updateLeft();
+    return;
+  }
+  rightPage.innerHTML = STEP_HTML[idx];
+  rightPage.style.pointerEvents = 'auto';
+  currentStep = idx;
+  updateLeft();
+}
+
+function focusFirstRightInput(){
+  setTimeout(()=> {
+    const input = rightPage.querySelector('input, textarea, select, button');
+    if(input) {
+      input.focus();
+      if(input.type !== 'button' && input.type !== 'submit') {
+        // FIXED: Add null check before setting animation
+        if (input.style) {
+          input.style.animation = 'pulse 2s infinite';
+          setTimeout(() => {
+            if (input.style) {
+              input.style.animation = '';
+            }
+          }, 2000);
+        }
+      }
+    }
+  }, 120);
+}
+
+function toggleSel(el){ 
+  if (!el) return; // FIXED: Check if element exists
+  
+  el.classList.toggle('sel'); 
+  // Add ripple effect
+  const ripple = document.createElement('span');
+  const rect = el.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const x = event.clientX - rect.left - size/2;
+  const y = event.clientY - rect.top - size/2;
+  
+  ripple.style.cssText = `
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(51, 204, 255, 0.3);
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    width: ${size}px;
+    height: ${size}px;
+    left: ${x}px;
+    top: ${y}px;
+    pointer-events: none;
+  `;
+  
+  el.style.position = 'relative';
+  el.style.overflow = 'hidden';
+  el.appendChild(ripple);
+  
+  setTimeout(() => {
+    if (ripple.parentNode) {
+      ripple.remove();
+    }
+  }, 600);
+}
+
+function selectAvatar(img){ 
+  if (!img) return; // FIXED: Check if element exists
+  
+  const avatars = rightPage.querySelectorAll('.avatar');
+  if (avatars) {
+    avatars.forEach(a => a.classList.remove('sel'));
+  }
+  
+  img.classList.add('sel'); 
+  
+  // Add selection animation
+  if (img.style) {
+    img.style.animation = 'avatarPulse 0.6s ease-out';
+    setTimeout(() => {
+      if (img.style) {
+        img.style.animation = '';
+      }
+    }, 600);
+  }
+}
+
+/* ---------- Navigation ---------- */
+function nextStep(){
+  if (currentStep === 1) {
+    signupData.name = document.getElementById('su_name')?.value?.trim();
+    signupData.email = document.getElementById('su_email')?.value?.trim();
+    signupData.phone = document.getElementById('su_phone')?.value?.trim();
+  }
+  if (currentStep === 2) {
+    signupData.password = document.getElementById('su_pass')?.value;
+    signupData.confirm = document.getElementById('su_confirm')?.value;
+  }
+  flipTo(Math.min(STEP_HTML.length - 2, currentStep + 1));
+}
+
+function prevStep(){ flipTo(Math.max(0, currentStep - 1)); }
+
+/* ---------- Enhanced Auth ---------- */
+function handleLogin(){
+  const ident = document.getElementById('login_ident')?.value?.trim();
+  const pass = document.getElementById('login_pass')?.value || '';
+  if(!ident || !pass){ 
+    showError('Please enter email/username and password.');
+    return false; // Prevent navigation
+  }
+
+  const stored = JSON.parse(localStorage.getItem('ol_user') || 'null');
+  if(!stored){ 
+    showError('No account found. Please sign up first.'); 
+    return false; // Prevent navigation
+  }
+
+  if((ident === stored.email || ident === stored.name) && pass === stored.password){
+    // Store login status
+    localStorage.setItem('user_logged_in', 'true');
+    return true; // Allow navigation
+  } else {
+    showError('Invalid credentials.');
+    return false; // Prevent navigation
+  }
+}
+
+function showError(message) {
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = `
+    background: rgba(255, 0, 0, 0.2);
+    color: #ff6666;
+    padding: 10px;
+    border-radius: 6px;
+    margin: 10px 0;
+    text-align: center;
+    animation: shake 0.5s ease-in-out;
+    border-left: 3px solid #ff3366;
+  `;
+  errorDiv.textContent = message;
+  
+  const existingError = rightPage.querySelector('.error-message');
+  if (existingError) existingError.remove();
+  
+  errorDiv.className = 'error-message';
+  rightPage.insertBefore(errorDiv, rightPage.firstChild);
+  
+  setTimeout(() => {
+    if (errorDiv.parentNode) {
+      errorDiv.style.animation = 'fadeOut 0.5s ease-out forwards';
+      setTimeout(() => {
+        if (errorDiv.parentNode) {
+          errorDiv.remove();
+        }
+      }, 500);
+    }
+  }, 3000);
+}
+
+
+
+function finish(){
+  // Now only check the value that was set by selectAvatar()
+  if (!signupData.avatar || signupData.avatar.trim() === '') {
+    showError('Please select an avatar before finishing sign up.');
+    return false;
+  }
+  signupData.authors = Array.from(document.querySelectorAll('.sel-btn.sel')).map(e => e.textContent);
+  signupData.genres = Array.from(document.querySelectorAll('.sel-btn.sel')).map(e => e.textContent);
+
+  if (!signupData.name || !signupData.email || !signupData.password || !signupData.confirm) {
+    showError('Please complete name, email, and password before finishing.');
+    return false;
+  }
+  if (signupData.password !== signupData.confirm) {
+    showError('Passwords do not match.');
+    return false;
+  }
+
+  signupData.joinDate = new Date().getFullYear().toString();
+  localStorage.setItem('ol_user', JSON.stringify(signupData));
+  localStorage.setItem('user_logged_in', 'true');
+  return true;
+
+ 
+   
+  // 1) Avatar – you already select it earlier using selectAvatar()
+  //    At this point signupData.avatar should already be set.
+  if (!signupData.avatar || signupData.avatar.trim() === "") {
+    showError('Please select an avatar before finishing sign up.');
+    return false;
+  }
+
+  // 2) FAVORITE AUTHORS
+  //    These are the cards in your "Choose Favorite Authors" step.
+  //    They have class "author-card sel-btn" and get class "sel" when clicked.
+  signupData.authors = Array.from(
+    document.querySelectorAll('.selection-grid .author-card.sel')
+  ).map(el => el.textContent.trim());
+
+  // 3) FAVORITE GENRES
+  //    These are the buttons like Scientific, Humor, Fantasy… with class "sel-btn".
+  signupData.genres = Array.from(
+    document.querySelectorAll('.selection-grid .sel-btn.sel')
+  ).map(el => el.textContent.trim());
+
+  // 4) BASIC VALIDATION (name, email, password)
+  if (!signupData.name || !signupData.email || !signupData.password || !signupData.confirm) {
+    showError('Please complete name, email, and password before finishing.');
+    return false;
+  }
+  if (signupData.password !== signupData.confirm) {
+    showError('Passwords do not match.');
+    return false;
+  }
+
+  // 5) SAVE USER OBJECT IN LOCALSTORAGE
+  signupData.joinDate = new Date().getFullYear().toString();
+  localStorage.setItem('ol_user', JSON.stringify(signupData));
+  localStorage.setItem('user_logged_in', 'true');
+
+  return true; // allow navigation to homepage/profile
+}
+
+
+
+  
+function closeBook(){
+  book.classList.remove('open');
+  renderStep(null);
+  tabLogin.classList.remove('active'); tabSignup.classList.remove('active');
+}
+
+/* ---------- Enhanced Init ---------- */
+renderStep(null);
+updateLeft();
+
+// Add ripple effect CSS
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes ripple {
+    to { transform: scale(4); opacity: 0; }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(51, 204, 255, 0.4); }
+    50% { box-shadow: 0 0 0 10px rgba(51, 204, 255, 0); }
+  }
+  @keyframes fadeOut {
+    to { opacity: 0; transform: translateY(-20px); }
+  }
+`;
+document.head.appendChild(style);
+
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter' && currentStep !== null){
+    if(currentStep === 0) {
+      const loginBtn = document.querySelector('.btn');
+      if(loginBtn && loginBtn.onclick) {
+        loginBtn.click();
+      }
+    }
+    else if(currentStep >=1 && currentStep < STEP_HTML.length-2) nextStep();
+    else if(currentStep === STEP_HTML.length-2) {
+      const finishBtn = document.querySelector('.btn');
+      if(finishBtn && finishBtn.onclick) {
+        finishBtn.click();
+      }
+    }
+  }
+});
+
+// Add page load animation
+window.addEventListener('load', () => {
+  if (document.body.style) {
+    document.body.style.opacity = '0';
+    document.body.style.animation = 'fadeIn 1s ease-out forwards';
+  }
+  
+  const fadeInStyle = document.createElement('style');
+  fadeInStyle.textContent = `
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  `;
+  document.head.appendChild(fadeInStyle);
+});
+
+function selectAvatar(img) {
+  if (!img) return;
+  // Remove .sel from all
+  const avatars = img.closest('.avatar-grid').querySelectorAll('.avatar');
+  avatars.forEach(a => a.classList.remove('sel'));
+  img.classList.add('sel');
+  // SAVE the avatar's URL for use in finish()
+  signupData.avatar = img.getAttribute('data-src');
+}
+
+
+function handleFinishSignup() {
+  if (finish()) {
+    // Redirect to homepage.html after successful signup
+    window.location.href = "homepage.html";
+  }
+}
+
+
+
+
+
+</script>
+
+</body>
+</html>

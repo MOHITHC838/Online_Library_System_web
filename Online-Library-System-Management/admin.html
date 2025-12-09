@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GameVerse Library — Admin Panel</title>
+<link rel="stylesheet" href="./responsive.css">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Rajdhani', 'Orbitron', sans-serif;
+    background: 
+      radial-gradient(circle at 20% 30%, #ff3366 0%, transparent 20%),
+      radial-gradient(circle at 80% 70%, #33ccff 0%, transparent 20%),
+      radial-gradient(circle at 40% 80%, #ffcc00 0%, transparent 20%),
+      linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+    color: #ffffff;
+    min-height: 100vh;
+    animation: backgroundPulse 15s ease-in-out infinite;
+  }
+
+  @keyframes backgroundPulse {
+    0%, 100% { 
+      background: 
+        radial-gradient(circle at 20% 30%, #ff3366 0%, transparent 20%),
+        radial-gradient(circle at 80% 70%, #33ccff 0%, transparent 20%),
+        radial-gradient(circle at 40% 80%, #ffcc00 0%, transparent 20%),
+        linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+    }
+    33% { 
+      background: 
+        radial-gradient(circle at 80% 30%, #33ccff 0%, transparent 20%),
+        radial-gradient(circle at 40% 70%, #ffcc00 0%, transparent 20%),
+        radial-gradient(circle at 20% 80%, #ff3366 0%, transparent 20%),
+        linear-gradient(225deg, #0f0f1a 0%, #1a1a2e 100%);
+    }
+    66% { 
+      background: 
+        radial-gradient(circle at 40% 30%, #ffcc00 0%, transparent 20%),
+        radial-gradient(circle at 20% 70%, #ff3366 0%, transparent 20%),
+        radial-gradient(circle at 80% 80%, #33ccff 0%, transparent 20%),
+        linear-gradient(315deg, #0f0f1a 0%, #1a1a2e 100%);
+    }
+  }
+
+  /* Login Form Styles */
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: rgba(15, 15, 26, 0.9);
+  }
+
+  .login-form {
+    background: rgba(42, 42, 74, 0.9);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(255, 51, 102, 0.3);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    position: relative;
+  }
+
+  .login-form::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ff3366, #33ccff, #ffcc00);
+  }
+
+  .login-logo {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #ffcc00;
+    text-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+  }
+
+  .login-title {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: #ffcc00;
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+  }
+
+  .login-subtitle {
+    color: #33ccff;
+    margin-bottom: 30px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #ffcc00;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #33ccff;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: rgba(30, 30, 50, 0.8);
+    color: white;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: #ffcc00;
+    box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .login-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #ff3366, #cc1a4a);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(255, 51, 102, 0.4);
+  }
+
+  .login-btn:hover {
+    background: linear-gradient(135deg, #ff1a53, #b3153a);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(255, 51, 102, 0.6);
+  }
+
+  /* Header/Navbar */
+  header {
+    width: 100%;
+    background: rgba(26, 26, 46, 0.9);
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, #ffcc00, #ff3366);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+  }
+
+  nav ul {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+  }
+
+  nav a {
+    color: #33ccff;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  nav a:hover {
+    background: rgba(51, 204, 255, 0.2);
+    transform: translateY(-2px);
+  }
+
+  nav a.active {
+    background: rgba(51, 204, 255, 0.2);
+  }
+
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #33ccff;
+    transition: all 0.3s ease;
+  }
+
+  nav a:hover::after {
+    width: 100%;
+    left: 0;
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff3366, #33ccff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0 0 15px rgba(51, 204, 255, 0.5);
+  }
+
+  /* Main Content */
+  .admin-container {
+    padding: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .admin-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .admin-title {
+    font-size: 2.5rem;
+    color: #ffcc00;
+    margin-bottom: 10px;
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+  }
+
+  .admin-subtitle {
+    color: #33ccff;
+    font-size: 1.1rem;
+  }
+
+  /* Admin Dashboard Stats */
+  .admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .stat-card {
+    background: rgba(42, 42, 74, 0.7);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #ff3366, #33ccff, #ffcc00);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(255, 51, 102, 0.3);
+  }
+
+  .stat-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffcc00;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+  }
+
+  .stat-card:hover .stat-number {
+    transform: scale(1.1);
+  }
+
+  .stat-label {
+    color: #33ccff;
+    font-size: 1rem;
+  }
+
+  /* Admin Sections */
+  .admin-section {
+    background: rgba(42, 42, 74, 0.7);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+  }
+
+  .admin-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ff3366, #33ccff, #ffcc00);
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+    color: #ffcc00;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+  }
+
+  /* Tables */
+  .admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .admin-table th {
+    background: rgba(51, 204, 255, 0.1);
+    color: #ffcc00;
+    font-weight: 600;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+  }
+
+  .admin-table tr:hover {
+    background: rgba(255,255,255,0.05);
+  }
+
+  /* Status Badges */
+  .status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    border: 1px solid;
+  }
+
+  .status-pending {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffcc00;
+    border-color: rgba(255, 204, 0, 0.3);
+  }
+
+  .status-approved {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4caf50;
+    border-color: rgba(76, 175, 80, 0.3);
+  }
+
+  .status-rejected {
+    background: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+    border-color: rgba(244, 67, 54, 0.3);
+  }
+
+  .status-borrowed {
+    background: rgba(33, 150, 243, 0.2);
+    color: #33ccff;
+    border-color: rgba(51, 204, 255, 0.3);
+  }
+
+  .status-returned {
+    background: rgba(156, 39, 176, 0.2);
+    color: #e100ff;
+    border-color: rgba(225, 0, 255, 0.3);
+  }
+
+  /* Action Buttons */
+  .action-btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.8rem;
+    margin: 2px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-approve {
+    background: linear-gradient(135deg, #00cc66, #00994d);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 204, 102, 0.4);
+  }
+
+  .btn-approve:hover {
+    background: linear-gradient(135deg, #00b359, #008040);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 204, 102, 0.6);
+  }
+
+  .btn-reject {
+    background: linear-gradient(135deg, #ff3366, #cc1a4a);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 51, 102, 0.4);
+  }
+
+  .btn-reject:hover {
+    background: linear-gradient(135deg, #ff1a53, #b3153a);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 51, 102, 0.6);
+  }
+
+  .btn-view {
+    background: linear-gradient(135deg, #33ccff, #1a99cc);
+    color: white;
+    box-shadow: 0 4px 15px rgba(51, 204, 255, 0.4);
+  }
+
+  .btn-view:hover {
+    background: linear-gradient(135deg, #1a99cc, #147399);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(51, 204, 255, 0.6);
+  }
+
+  .btn-return {
+    background: linear-gradient(135deg, #ffcc00, #cc9900);
+    color: #1a1a2e;
+    box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4);
+  }
+
+  .btn-return:hover {
+    background: linear-gradient(135deg, #e6b800, #b38600);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 204, 0, 0.6);
+  }
+
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #33ccff;
+  }
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.7;
+  }
+
+  /* Tabs */
+  .admin-tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+  }
+
+  .tab-btn {
+    padding: 12px 25px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    color: #33ccff;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tab-btn::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ff3366, #33ccff, #ffcc00);
+    transition: width 0.3s ease;
+  }
+
+  .tab-btn.active {
+    color: #ffcc00;
+  }
+
+  .tab-btn.active::before {
+    width: 100%;
+  }
+
+  .tab-btn:hover {
+    color: #ffcc00;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  /* User Management */
+  .user-card {
+    background: rgba(42, 42, 74, 0.8);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-left: 4px solid #ffcc00;
+    transition: all 0.3s ease;
+  }
+
+  .user-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 10px 25px rgba(255, 51, 102, 0.3);
+  }
+
+  .user-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+
+  .user-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  /* Book Management Styles */
+  .book-management-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .add-book-btn {
+    background: linear-gradient(135deg, #00cc66, #00994d);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 204, 102, 0.4);
+  }
+
+  .add-book-btn:hover {
+    background: linear-gradient(135deg, #00b359, #008040);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 204, 102, 0.6);
+  }
+
+  /* Book Form Modal */
+  .book-form-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 1001;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .book-form-content {
+    background: rgba(42, 42, 74, 0.95);
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 15px 40px rgba(255, 51, 102, 0.3);
+    animation: modalSlideIn 0.4s ease;
+    border: 2px solid #33ccff;
+    backdrop-filter: blur(10px);
+  }
+
+  .book-form-header {
+    background: linear-gradient(90deg, #33ccff, #1a99cc);
+    color: white;
+    padding: 20px;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .book-form-body {
+    padding: 30px;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+
+  .form-row .form-group {
+    flex: 1;
+  }
+
+  .book-image-preview {
+    width: 100px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #33ccff;
+    margin-top: 10px;
+    display: none;
+  }
+
+  .submit-book-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #00cc66, #00994d);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+  }
+
+  .submit-book-btn:hover {
+    background: linear-gradient(135deg, #00b359, #008040);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 204, 102, 0.4);
+  }
+
+  /* Book Management Table */
+  .book-actions {
+    display: flex;
+    gap: 5px;
+  }
+
+  .btn-edit {
+    background: linear-gradient(135deg, #ffcc00, #cc9900);
+    color: #1a1a2e;
+  }
+
+  .btn-edit:hover {
+    background: linear-gradient(135deg, #e6b800, #b38600);
+  }
+
+  .btn-delete {
+    background: linear-gradient(135deg, #ff3366, #cc1a4a);
+    color: white;
+  }
+
+  .btn-delete:hover {
+    background: linear-gradient(135deg, #ff1a53, #b3153a);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .admin-stats {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .admin-table {
+      font-size: 0.9rem;
+    }
+    
+    .admin-table th,
+    .admin-table td {
+      padding: 10px 8px;
+    }
+    
+    .admin-tabs {
+      flex-direction: column;
+    }
+    
+    .user-actions {
+      flex-direction: column;
+    }
+    
+    .form-row {
+      flex-direction: column;
+    }
+    
+    .book-actions {
+      flex-direction: column;
+    }
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.5s ease;
+  }
+
+  .slide-in {
+    animation: slideIn 0.5s ease;
+  }
+
+  /* Hidden class for login/admin toggle */
+  .hidden {
+    display: none;
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Login Form -->
+  <div id="loginPage" class="login-container">
+    <div class="login-form">
+      <div class="login-logo">🎮</div>
+      <h2 class="login-title">GameVerse Admin Login</h2>
+      <p class="login-subtitle">Sign in to access the admin panel</p>
+      
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" class="form-control" placeholder="Enter your username" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+        </div>
+        
+        <button type="submit" class="login-btn">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Panel (Initially Hidden) -->
+  <div id="adminPage" class="hidden">
+  <nav class="navbar">
+    <div class="nav-container">
+        <a href="homepage.html" class="nav-logo">🎮  GameVerse Library!</a>
+
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+          
+        <ul class="nav-menu">
+            <li><a href="homepage.html" class="nav-link">Home</a></li>      
+            <li><a href="book-catalog.html" class="nav-link">Book-Catlog</a></li>
+            <li><a href="admin.html" class="nav-link">Admin</a></li>
+            <li><a href="./about.html" class="nav-link">About</a></li>
+            <li><a href="./profile.html" class="nav-link">Your Profile</a></li>
+        </ul>
+    </div>
+</nav>
+
+    <!-- Main Content -->
+    <div class="admin-container">
+      <div class="admin-header">
+        <h1 class="admin-title">GameVerse Administration</h1>
+        <p class="admin-subtitle">Manage gaming book requests, user borrowings, and system operations</p>
+      </div>
+
+      <!-- Admin Stats -->
+      <div class="admin-stats">
+        <div class="stat-card">
+          <div class="stat-number" id="totalRequests">0</div>
+          <div class="stat-label">Total Requests</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="pendingRequests">0</div>
+          <div class="stat-label">Pending Requests</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="activeBorrowings">0</div>
+          <div class="stat-label">Active Borrowings</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="totalUsers">0</div>
+          <div class="stat-label">Registered Gamers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="totalBooks">0</div>
+          <div class="stat-label">Total Books</div>
+        </div>
+      </div>
+
+      <!-- Admin Tabs -->
+      <div class="admin-tabs">
+        <button class="tab-btn active" onclick="openTab('requests')">📋 Book Requests</button>
+        <button class="tab-btn" onclick="openTab('borrowings')">📚 Active Borrowings</button>
+        <button class="tab-btn" onclick="openTab('users')">👥 Gamer Management</button>
+        <button class="tab-btn" onclick="openTab('purchases')">💰 Purchase History</button>
+        <button class="tab-btn" onclick="openTab('books')">📖 Book Management</button>
+      </div>
+
+      <!-- Book Requests Tab -->
+      <div id="requests" class="tab-content active">
+        <div class="admin-section">
+          <h2 class="section-title">Gaming Book Requests Management</h2>
+          <div id="requestsList">
+            <!-- Requests will be loaded here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Borrowings Tab -->
+      <div id="borrowings" class="tab-content">
+        <div class="admin-section">
+          <h2 class="section-title">Active Gaming Book Borrowings</h2>
+          <div id="borrowingsList">
+            <!-- Borrowings will be loaded here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- User Management Tab -->
+      <div id="users" class="tab-content">
+        <div class="admin-section">
+          <h2 class="section-title">Gamer Management</h2>
+          <div id="usersList">
+            <!-- Users will be loaded here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Purchase History Tab -->
+      <div id="purchases" class="tab-content">
+        <div class="admin-section">
+          <h2 class="section-title">Purchase History</h2>
+          <div id="purchasesList">
+            <!-- Purchases will be loaded here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Book Management Tab -->
+      <div id="books" class="tab-content">
+        <div class="admin-section">
+          <h2 class="section-title">Book Management</h2>
+          <div class="book-management-actions">
+            <button class="add-book-btn" onclick="openAddBookForm()">➕ Add New Book</button>
+          </div>
+          <div id="booksManagementList">
+            <!-- Books will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Book Form Modal -->
+  <div class="book-form-modal" id="bookFormModal">
+    <div class="book-form-content">
+      <div class="book-form-header">
+        <h3 id="bookFormTitle">Add New Book</h3>
+        <button class="close-btn" onclick="closeBookForm()">×</button>
+      </div>
+      <div class="book-form-body">
+        <form id="bookForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="bookTitle">Book Title *</label>
+              <input type="text" id="bookTitle" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="bookAuthor">Author *</label>
+              <input type="text" id="bookAuthor" class="form-control" required>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="bookGenre">Genre *</label>
+              <select id="bookGenre" class="form-control" required>
+                <option value="">Select Genre</option>
+                <option value="Fiction">Fiction</option>
+                <option value="Science">Science</option>
+                <option value="History">History</option>
+                <option value="Biography">Biography</option>
+                <option value="Technology">Technology</option>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Mystery">Mystery</option>
+                <option value="Romance">Romance</option>
+                <option value="Horror">Horror</option>
+                <option value="Psychology">Psychology</option>
+                <option value="Science Fiction">Science Fiction</option>
+                <option value="Historical Fiction">Historical Fiction</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="bookYear">Publication Year *</label>
+              <input type="number" id="bookYear" class="form-control" min="1900" max="2030" required>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="bookISBN">ISBN</label>
+              <input type="text" id="bookISBN" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="bookPages">Pages</label>
+              <input type="number" id="bookPages" class="form-control" min="1">
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="bookPrice">Price ($)</label>
+              <input type="number" id="bookPrice" class="form-control" step="0.01" min="0">
+            </div>
+            <div class="form-group">
+              <label for="bookAvailable">Availability</label>
+              <select id="bookAvailable" class="form-control">
+                <option value="true">Available</option>
+                <option value="false">Not Available</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="bookImage">Book Cover Image URL</label>
+            <input type="url" id="bookImage" class="form-control" placeholder="https://example.com/image.jpg">
+            <img id="bookImagePreview" class="book-image-preview" alt="Book Cover Preview">
+          </div>
+          
+          <div class="form-group">
+            <label for="bookDescription">Book Description</label>
+            <textarea id="bookDescription" class="form-control" rows="4" placeholder="Enter book description..."></textarea>
+          </div>
+          
+          <button type="submit" class="submit-book-btn" id="submitBookBtn">Add Book</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Login functionality
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    
+    // Simple authentication (in a real app, this would be server-side)
+    if (username === 'admin' && password === 'admin123') {
+      // Hide login, show admin panel
+      document.getElementById('loginPage').classList.add('hidden');
+      document.getElementById('adminPage').classList.remove('hidden');
+      
+      // Load admin data
+      loadAllData();
+      updateStats();
+    } else {
+      alert('Invalid credentials. Try admin/admin123');
+    }
+  });
+
+  // Load all data when page loads (after login)
+  function loadAllData() {
+    loadBookRequests();
+    loadBorrowings();
+    loadUsers();
+    loadPurchases();
+    loadBooksManagement();
+  }
+
+  // Tab navigation
+  function openTab(tabName) {
+    // Hide all tab contents
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabContents.forEach(tab => tab.classList.remove('active'));
+    
+    // Remove active class from all buttons
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    tabButtons.forEach(btn => btn.classList.remove('active'));
+    
+    // Show selected tab and activate button
+    document.getElementById(tabName).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+
+  // Update statistics
+  // Enhanced updateStats function
+function updateStats() {
+    const requests = JSON.parse(localStorage.getItem('bookRequests') || '[]');
+    const borrowings = JSON.parse(localStorage.getItem('borrowRequests') || '[]');
+    const users = JSON.parse(localStorage.getItem('libraryUsers') || '[]');
+    const books = JSON.parse(localStorage.getItem('libraryBooks') || '[]');
+    const purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
+    const paymentHistory = JSON.parse(localStorage.getItem('paymentHistory') || '[]');
+    
+    // Calculate total purchases (including payment history)
+    const allPurchases = [...purchases];
+    paymentHistory.forEach(payment => {
+        const exists = allPurchases.some(p => p.id === payment.id);
+        if (!exists) {
+            allPurchases.push({
+                id: payment.id,
+                amount: payment.amount || 0
+            });
+        }
+    });
+    
+    const totalRevenue = allPurchases.reduce((sum, purchase) => sum + (purchase.amount || 0), 0);
+    
+    document.getElementById('totalRequests').textContent = requests.length;
+    document.getElementById('pendingRequests').textContent = requests.filter(r => r.status === 'pending').length;
+    document.getElementById('activeBorrowings').textContent = borrowings.filter(b => !b.returned).length;
+    document.getElementById('totalUsers').textContent = users.length;
+    document.getElementById('totalBooks').textContent = books.length;
+    
+    // Add a new stat card for revenue if you want (optional)
+    // You can add this HTML in your admin-stats section:
+    // <div class="stat-card">
+    //   <div class="stat-number" id="totalRevenue">$0</div>
+    //   <div class="stat-label">Total Revenue</div>
+    // </div>
+    
+    // Then uncomment this line:
+    // document.getElementById('totalRevenue').textContent = `$${totalRevenue.toFixed(2)}`;
+}
+  // Function to export purchase history as CSV
+function exportPurchaseHistory() {
+    let purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
+    const paymentHistory = JSON.parse(localStorage.getItem('paymentHistory') || '[]');
+    
+    // Merge with payment history
+    paymentHistory.forEach(payment => {
+        const exists = purchases.some(p => p.id === payment.id);
+        if (!exists) {
+            purchases.push({
+                id: payment.id,
+                type: payment.type === 'book_purchase' ? 'book' : 'book_download',
+                item: {
+                    title: payment.bookTitle,
+                    author: payment.author
+                },
+                amount: payment.amount || 0,
+                paymentMethod: payment.paymentMethod || 'free_download',
+                user: payment.user,
+                timestamp: payment.transactionDate,
+                status: payment.status || 'completed'
+            });
+        }
+    });
+    
+    if (purchases.length === 0) {
+        alert('No purchase data to export.');
+        return;
+    }
+    
+    // Create CSV content
+    const headers = ['Date', 'Transaction ID', 'Customer', 'Type', 'Item', 'Author', 'Amount', 'Payment Method', 'Status'];
+    const csvRows = [headers.join(',')];
+    
+    purchases.forEach(purchase => {
+        const date = new Date(purchase.timestamp);
+        const row = [
+            date.toLocaleString(),
+            purchase.id,
+            `"${purchase.user || 'Unknown'}"`,
+            purchase.type === 'book' ? 'Book Purchase' : 'Membership',
+            `"${purchase.item?.title || 'Unknown'}"`,
+            `"${purchase.item?.author || ''}"`,
+            purchase.amount.toFixed(2),
+            getPaymentMethodName(purchase.paymentMethod),
+            purchase.status || 'completed'
+        ];
+        csvRows.push(row.join(','));
+    });
+    
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `purchase_history_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    
+    alert(`Exported ${purchases.length} transactions to CSV.`);
+}
+  // Load book requests
+  function loadBookRequests() {
+    const requests = JSON.parse(localStorage.getItem('bookRequests') || '[]');
+    const requestsList = document.getElementById('requestsList');
+    
+    if (requests.length === 0) {
+      requestsList.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <h3>No Gaming Book Requests</h3>
+          <p>No gaming book requests have been submitted yet.</p>
+        </div>
+      `;
+      return;
+    }
+    
+    requestsList.innerHTML = `
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Gamer</th>
+            <th>Book</th>
+            <th>Author</th>
+            <th>Genre</th>
+            <th>Reason</th>
+            <th>Phone</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${requests.map(request => `
+            <tr class="fade-in">
+              <td>${request.username}</td>
+              <td>${request.bookTitle}</td>
+              <td>${request.author}</td>
+              <td>${request.genre}</td>
+              <td>${request.reason}</td>
+              <td>${request.phone}</td>
+              <td>${new Date(request.timestamp).toLocaleDateString()}</td>
+              <td>
+                <span class="status-badge status-${request.status}">
+                  ${request.status}
+                </span>
+              </td>
+              <td>
+                ${request.status === 'pending' ? `
+                  <button class="action-btn btn-approve" onclick="approveRequest('${request.id}')">Approve</button>
+                  <button class="action-btn btn-reject" onclick="rejectRequest('${request.id}')">Reject</button>
+                ` : `
+                  <span>Processed</span>
+                `}
+                <button class="action-btn btn-view" onclick="viewRequestDetails('${request.id}')">View</button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  }
+
+  // Load borrowings
+  function loadBorrowings() {
+    const borrowings = JSON.parse(localStorage.getItem('borrowRequests') || '[]');
+    const borrowingsList = document.getElementById('borrowingsList');
+    
+    const activeBorrowings = borrowings.filter(b => !b.returned);
+    
+    if (activeBorrowings.length === 0) {
+      borrowingsList.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">📚</div>
+          <h3>No Active Borrowings</h3>
+          <p>There are no currently borrowed gaming books.</p>
+        </div>
+      `;
+      return;
+    }
+    
+    borrowingsList.innerHTML = `
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Gamer</th>
+            <th>Book</th>
+            <th>Author</th>
+            <th>Borrow Date</th>
+            <th>Return Date</th>
+            <th>Phone</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${activeBorrowings.map(borrowing => `
+            <tr class="fade-in">
+              <td>${borrowing.username}</td>
+              <td>${borrowing.bookTitle}</td>
+              <td>${borrowing.author}</td>
+              <td>${new Date(borrowing.borrowDate).toLocaleDateString()}</td>
+              <td>${new Date(borrowing.returnDate).toLocaleDateString()}</td>
+              <td>${borrowing.phone}</td>
+              <td>
+                <span class="status-badge status-borrowed">
+                  Borrowed
+                </span>
+              </td>
+              <td>
+                <button class="action-btn btn-return" onclick="markAsReturned('${borrowing.id}')">Mark Returned</button>
+                <button class="action-btn btn-view" onclick="viewBorrowingDetails('${borrowing.id}')">View</button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  }
+
+  // Load users
+  function loadUsers() {
+    const users = JSON.parse(localStorage.getItem('libraryUsers') || '[]');
+    const usersList = document.getElementById('usersList');
+    
+    if (users.length === 0) {
+      usersList.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">👥</div>
+          <h3>No Gamers</h3>
+          <p>No gamers have registered yet.</p>
+        </div>
+      `;
+      return;
+    }
+    
+    usersList.innerHTML = users.map(user => `
+      <div class="user-card slide-in">
+        <div class="user-info">
+          <div><strong>Name:</strong> ${user.name}</div>
+          <div><strong>Email:</strong> ${user.email}</div>
+          <div><strong>Phone:</strong> ${user.phone}</div>
+          <div><strong>Member Since:</strong> ${user.joinDate || '2023'}</div>
+        </div>
+        <div class="user-actions">
+          <button class="action-btn btn-view" onclick="viewUserDetails('${user.id}')">View Details</button>
+          <button class="action-btn" style="background: linear-gradient(135deg, #ffcc00, #cc9900); color: #1a1a2e;" onclick="editUser('${user.id}')">Edit</button>
+          <button class="action-btn btn-reject" onclick="deleteUser('${user.id}')">Delete</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Load purchases
+  // Enhanced loadPurchases function
+function loadPurchases() {
+    // Try to get purchases from multiple sources
+    let purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
+    const paymentHistory = JSON.parse(localStorage.getItem('paymentHistory') || '[]');
+    
+    // Merge payment history into purchases if needed
+    paymentHistory.forEach(payment => {
+        // Check if this payment already exists in purchases
+        const exists = purchases.some(p => p.id === payment.id);
+        if (!exists) {
+            purchases.push({
+                id: payment.id,
+                type: payment.type === 'book_purchase' ? 'book' : 'book_download',
+                item: {
+                    title: payment.bookTitle,
+                    author: payment.author
+                },
+                amount: payment.amount || 0,
+                paymentMethod: payment.paymentMethod || 'free_download',
+                user: payment.user,
+                timestamp: payment.transactionDate,
+                status: payment.status || 'completed'
+            });
+        }
+    });
+    
+    // Sort by date (newest first)
+    purchases.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    const purchasesList = document.getElementById('purchasesList');
+    
+    if (purchases.length === 0) {
+        purchasesList.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">💰</div>
+                <h3>No Purchase History</h3>
+                <p>No purchases have been made yet.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Calculate total revenue
+    const totalRevenue = purchases.reduce((sum, purchase) => sum + (purchase.amount || 0), 0);
+    
+    purchasesList.innerHTML = `
+        <div style="margin-bottom: 20px; padding: 15px; background: rgba(42, 42, 74, 0.8); border-radius: 10px; border-left: 4px solid #ffcc00;">
+            <h3 style="color: #ffcc00; margin-bottom: 10px;">📊 Sales Summary</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div>
+                    <div style="font-size: 2rem; color: #33ccff; font-weight: bold;">${purchases.length}</div>
+                    <div style="color: #cccccc;">Total Transactions</div>
+                </div>
+                <div>
+                    <div style="font-size: 2rem; color: #4CAF50; font-weight: bold;">$${totalRevenue.toFixed(2)}</div>
+                    <div style="color: #cccccc;">Total Revenue</div>
+                </div>
+                <div>
+                    <div style="font-size: 2rem; color: #ffcc00; font-weight: bold;">${purchases.filter(p => p.paymentMethod !== 'free_download').length}</div>
+                    <div style="color: #cccccc;">Paid Purchases</div>
+                </div>
+            </div>
+        </div>
+        
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Type</th>
+                    <th>Item</th>
+                    <th>Amount</th>
+                    <th>Payment Method</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${purchases.map(purchase => {
+                    const date = new Date(purchase.timestamp);
+                    const typeIcon = purchase.type === 'book' ? '📚' : '👑';
+                    const typeText = purchase.type === 'book' ? 'Book Purchase' : 'Membership';
+                    const amountColor = purchase.amount > 0 ? '#4CAF50' : '#ffcc00';
+                    const paymentMethodName = getPaymentMethodName(purchase.paymentMethod);
+                    const isFree = purchase.paymentMethod === 'free_download' || purchase.amount === 0;
+                    
+                    return `
+                        <tr class="fade-in">
+                            <td>${date.toLocaleDateString()}<br><small>${date.toLocaleTimeString()}</small></td>
+                            <td>${purchase.user || 'Unknown'}</td>
+                            <td>${typeIcon} ${typeText}</td>
+                            <td>
+                                <strong>${purchase.item?.title || 'Unknown Item'}</strong><br>
+                                <small>${purchase.item?.author || ''}</small>
+                            </td>
+                            <td style="color: ${amountColor}; font-weight: bold;">
+                                ${isFree ? 'FREE' : '$' + purchase.amount.toFixed(2)}
+                            </td>
+                            <td>
+                                <span class="status-badge" style="background: rgba(51, 204, 255, 0.2); color: #33ccff; border-color: rgba(51, 204, 255, 0.3);">
+                                    ${paymentMethodName}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="status-badge status-approved">
+                                    ${purchase.status || 'completed'}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="action-btn btn-view" onclick="viewPurchaseDetails('${purchase.id}')">View</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('')}
+            </tbody>
+        </table>
+    `;
+}
+
+// New function to view purchase details
+function viewPurchaseDetails(purchaseId) {
+    // Try to find in purchases first
+    let purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
+    let purchase = purchases.find(p => p.id === purchaseId);
+    
+    // If not found, try payment history
+    if (!purchase) {
+        const paymentHistory = JSON.parse(localStorage.getItem('paymentHistory') || '[]');
+        const payment = paymentHistory.find(p => p.id === purchaseId);
+        
+        if (payment) {
+            purchase = {
+                id: payment.id,
+                type: payment.type === 'book_purchase' ? 'book' : 'book_download',
+                item: {
+                    title: payment.bookTitle,
+                    author: payment.author
+                },
+                amount: payment.amount || 0,
+                paymentMethod: payment.paymentMethod || 'free_download',
+                user: payment.user,
+                timestamp: payment.transactionDate,
+                status: payment.status || 'completed'
+            };
+        }
+    }
+    
+    if (purchase) {
+        const date = new Date(purchase.timestamp);
+        const isFree = purchase.amount === 0;
+        
+        alert(`
+            💰 Purchase Details:
+            
+            Transaction ID: ${purchase.id}
+            Date: ${date.toLocaleDateString()} ${date.toLocaleTimeString()}
+            Customer: ${purchase.user || 'Unknown'}
+            Type: ${purchase.type === 'book' ? '📚 Book Purchase' : '👑 Membership'}
+            
+            Item: ${purchase.item?.title || 'Unknown Item'}
+            ${purchase.item?.author ? `Author: ${purchase.item.author}` : ''}
+            
+            Amount: ${isFree ? 'FREE' : '$' + purchase.amount.toFixed(2)}
+            Payment Method: ${getPaymentMethodName(purchase.paymentMethod)}
+            Status: ${purchase.status || 'completed'}
+            
+            ${purchase.source ? `Source: ${purchase.source}` : ''}
+        `);
+    } else {
+        alert('Purchase details not found.');
+    }
+}
+  
+
+  // BOOK MANAGEMENT FUNCTIONS
+  let currentEditingBook = null;
+
+  function loadBooksManagement() {
+    const books = JSON.parse(localStorage.getItem('libraryBooks') || '[]');
+    const booksList = document.getElementById('booksManagementList');
+    
+    if (books.length === 0) {
+      booksList.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">📚</div>
+          <h3>No Books Available</h3>
+          <p>No books have been added to the library yet. Click "Add New Book" to get started.</p>
+        </div>
+      `;
+      return;
+    }
+    
+    booksList.innerHTML = `
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Cover</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Genre</th>
+            <th>Year</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${books.map(book => `
+            <tr class="fade-in">
+              <td><img src="${book.image}" alt="${book.title}" style="width: 50px; height: 60px; object-fit: cover; border-radius: 4px;"></td>
+              <td>${book.title}</td>
+              <td>${book.author}</td>
+              <td>${book.genre}</td>
+              <td>${book.year}</td>
+              <td>$${book.price ? book.price.toFixed(2) : '0.00'}</td>
+              <td>
+                <span class="status-badge ${book.available ? 'status-approved' : 'status-rejected'}">
+                  ${book.available ? 'Available' : 'Borrowed'}
+                </span>
+              </td>
+              <td>
+                <div class="book-actions">
+                  <button class="action-btn btn-edit" onclick="editBook('${book.id}')">Edit</button>
+                  <button class="action-btn btn-delete" onclick="deleteBook('${book.id}')">Delete</button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  }
+
+  function openAddBookForm() {
+    currentEditingBook = null;
+    document.getElementById('bookFormTitle').textContent = 'Add New Book';
+    document.getElementById('submitBookBtn').textContent = 'Add Book';
+    document.getElementById('bookForm').reset();
+    document.getElementById('bookImagePreview').style.display = 'none';
+    document.getElementById('bookFormModal').style.display = 'flex';
+  }
+
+  function closeBookForm() {
+    document.getElementById('bookFormModal').style.display = 'none';
+    currentEditingBook = null;
+  }
+
+  function editBook(bookId) {
+    const books = JSON.parse(localStorage.getItem('libraryBooks') || '[]');
+    const book = books.find(b => b.id == bookId);
+    
+    if (book) {
+      currentEditingBook = book;
+      document.getElementById('bookFormTitle').textContent = 'Edit Book';
+      document.getElementById('submitBookBtn').textContent = 'Update Book';
+      
+      // Fill form with book data
+      document.getElementById('bookTitle').value = book.title;
+      document.getElementById('bookAuthor').value = book.author;
+      document.getElementById('bookGenre').value = book.genre;
+      document.getElementById('bookYear').value = book.year;
+      document.getElementById('bookISBN').value = book.isbn || '';
+      document.getElementById('bookPages').value = book.pages || '';
+      document.getElementById('bookPrice').value = book.price || '';
+      document.getElementById('bookAvailable').value = book.available.toString();
+      document.getElementById('bookImage').value = book.image || '';
+      document.getElementById('bookDescription').value = book.description || '';
+      
+      // Show image preview if available
+      if (book.image) {
+        document.getElementById('bookImagePreview').src = book.image;
+        document.getElementById('bookImagePreview').style.display = 'block';
+      }
+      
+      document.getElementById('bookFormModal').style.display = 'flex';
+    }
+  }
+
+  function deleteBook(bookId) {
+    if (confirm('Are you sure you want to delete this book? This action cannot be undone.')) {
+      let books = JSON.parse(localStorage.getItem('libraryBooks') || '[]');
+      books = books.filter(book => book.id != bookId);
+      localStorage.setItem('libraryBooks', JSON.stringify(books));
+      loadBooksManagement();
+      updateStats();
+      alert('Book deleted successfully!');
+    }
+  }
+
+  // Handle book form submission
+  document.getElementById('bookForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const bookData = {
+      id: currentEditingBook ? currentEditingBook.id : 'book_' + Date.now(),
+      title: document.getElementById('bookTitle').value,
+      author: document.getElementById('bookAuthor').value,
+      genre: document.getElementById('bookGenre').value,
+      year: parseInt(document.getElementById('bookYear').value),
+      isbn: document.getElementById('bookISBN').value,
+      pages: document.getElementById('bookPages').value ? parseInt(document.getElementById('bookPages').value) : 0,
+      price: document.getElementById('bookPrice').value ? parseFloat(document.getElementById('bookPrice').value) : 0,
+      available: document.getElementById('bookAvailable').value === 'true',
+      image: document.getElementById('bookImage').value,
+      description: document.getElementById('bookDescription').value
+    };
+    
+    let books = JSON.parse(localStorage.getItem('libraryBooks') || '[]');
+    
+    if (currentEditingBook) {
+      // Update existing book
+      const index = books.findIndex(b => b.id === currentEditingBook.id);
+      if (index !== -1) {
+        books[index] = { ...books[index], ...bookData };
+      }
+    } else {
+      // Add new book
+      books.push(bookData);
+    }
+    
+    localStorage.setItem('libraryBooks', JSON.stringify(books));
+    closeBookForm();
+    loadBooksManagement();
+    updateStats();
+    alert(currentEditingBook ? 'Book updated successfully!' : 'Book added successfully!');
+  });
+
+  // Image preview functionality
+  document.getElementById('bookImage').addEventListener('input', function() {
+    const preview = document.getElementById('bookImagePreview');
+    if (this.value) {
+      preview.src = this.value;
+      preview.style.display = 'block';
+    } else {
+      preview.style.display = 'none';
+    }
+  });
+
+  // Request management functions
+  function approveRequest(requestId) {
+    const requests = JSON.parse(localStorage.getItem('bookRequests') || '[]');
+    const requestIndex = requests.findIndex(r => r.id === requestId);
+    
+    if (requestIndex !== -1) {
+      requests[requestIndex].status = 'approved';
+      requests[requestIndex].processedBy = 'Admin';
+      requests[requestIndex].processedAt = new Date().toISOString();
+      
+      localStorage.setItem('bookRequests', JSON.stringify(requests));
+      
+      alert('✅ Request approved successfully!');
+      loadBookRequests();
+      updateStats();
+    }
+  }
+
+  function rejectRequest(requestId) {
+    const requests = JSON.parse(localStorage.getItem('bookRequests') || '[]');
+    const requestIndex = requests.findIndex(r => r.id === requestId);
+    
+    if (requestIndex !== -1) {
+      requests[requestIndex].status = 'rejected';
+      requests[requestIndex].processedBy = 'Admin';
+      requests[requestIndex].processedAt = new Date().toISOString();
+      
+      localStorage.setItem('bookRequests', JSON.stringify(requests));
+      
+      alert('❌ Request rejected.');
+      loadBookRequests();
+      updateStats();
+    }
+  }
+
+  function viewRequestDetails(requestId) {
+    const requests = JSON.parse(localStorage.getItem('bookRequests') || '[]');
+    const request = requests.find(r => r.id === requestId);
+    
+    if (request) {
+      alert(`
+        📋 Gaming Book Request Details:
+        
+        Gamer: ${request.username}
+        Book: ${request.bookTitle}
+        Author: ${request.author}
+        Genre: ${request.genre}
+        Reason: ${request.reason}
+        Phone: ${request.phone}
+        Submitted: ${new Date(request.timestamp).toLocaleString()}
+        Status: ${request.status}
+        ${request.processedBy ? `Processed by: ${request.processedBy}` : ''}
+        ${request.processedAt ? `Processed at: ${new Date(request.processedAt).toLocaleString()}` : ''}
+      `);
+    }
+  }
+
+  // Borrowing management functions
+  function markAsReturned(borrowingId) {
+    const borrowings = JSON.parse(localStorage.getItem('borrowRequests') || '[]');
+    const borrowingIndex = borrowings.findIndex(b => b.id === borrowingId);
+    
+    if (borrowingIndex !== -1) {
+      borrowings[borrowingIndex].returned = true;
+      borrowings[borrowingIndex].returnedAt = new Date().toISOString();
+      
+      localStorage.setItem('borrowRequests', JSON.stringify(borrowings));
+      
+      alert('🎮 Gaming book marked as returned!');
+      loadBorrowings();
+      updateStats();
+    }
+  }
+
+  function viewBorrowingDetails(borrowingId) {
+    const borrowings = JSON.parse(localStorage.getItem('borrowRequests') || '[]');
+    const borrowing = borrowings.find(b => b.id === borrowingId);
+    
+    if (borrowing) {
+      alert(`
+        🎮 Gaming Book Borrowing Details:
+        
+        Gamer: ${borrowing.username}
+        Book: ${borrowing.bookTitle}
+        Author: ${borrowing.author}
+        Borrow Date: ${new Date(borrowing.borrowDate).toLocaleDateString()}
+        Return Date: ${new Date(borrowing.returnDate).toLocaleDateString()}
+        Phone: ${borrowing.phone}
+        Status: ${borrowing.returned ? 'Returned' : 'Active'}
+        ${borrowing.returnedAt ? `Returned at: ${new Date(borrowing.returnedAt).toLocaleString()}` : ''}
+      `);
+    }
+  }
+
+  // User management functions
+  function viewUserDetails(userId) {
+    const users = JSON.parse(localStorage.getItem('libraryUsers') || '[]');
+    const user = users.find(u => u.id === userId);
+    
+    if (user) {
+      alert(`
+        👤 Gamer Details:
+        
+        Name: ${user.name}
+        Email: ${user.email}
+        Phone: ${user.phone}
+        Member Since: ${user.joinDate || '2023'}
+        ${user.downloads ? `Gaming Books Downloaded: ${user.downloads.length}` : 'No downloads yet'}
+      `);
+    }
+  }
+
+  function editUser(userId) {
+    const users = JSON.parse(localStorage.getItem('libraryUsers') || '[]');
+    const user = users.find(u => u.id === userId);
+    
+    if (user) {
+      const newName = prompt('Enter new name:', user.name);
+      const newEmail = prompt('Enter new email:', user.email);
+      const newPhone = prompt('Enter new phone:', user.phone);
+      
+      if (newName && newEmail && newPhone) {
+        user.name = newName;
+        user.email = newEmail;
+        user.phone = newPhone;
+        
+        localStorage.setItem('libraryUsers', JSON.stringify(users));
+        alert('✅ Gamer updated successfully!');
+        loadUsers();
+      }
+    }
+  }
+
+  function deleteUser(userId) {
+    if (confirm('Are you sure you want to delete this gamer?')) {
+      const users = JSON.parse(localStorage.getItem('libraryUsers') || '[]');
+      const filteredUsers = users.filter(u => u.id !== userId);
+      
+      localStorage.setItem('libraryUsers', JSON.stringify(filteredUsers));
+      alert('✅ Gamer deleted successfully!');
+      loadUsers();
+      updateStats();
+    }
+  }
+
+  // Helper function
+  function getPaymentMethodName(method) {
+    const methods = {
+      'netbanking': 'Net Banking',
+      'upi': 'UPI Payment',
+      'credit': 'Credit Card',
+      'cash': 'Cash on Delivery'
+    };
+    return methods[method] || method;
+  }
+
+  // Auto-refresh data every 30 seconds
+  setInterval(() => {
+    if (!document.getElementById('adminPage').classList.contains('hidden')) {
+      loadAllData();
+      updateStats();
+    }
+  }, 30000);
+
+</script>
+<script src="./mobile-menu.js"></script>
+</body>
+</html>
